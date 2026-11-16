@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "simulacionecoweb",
+  "compatibility_date": "2026-11-01",
+  // Solo assets: sin "main", no hay script de Worker. Las rutas son por hash (#/eoq),
+  // así que el servidor solo sirve archivos estáticos.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "observability": { "enabled": false }
+}

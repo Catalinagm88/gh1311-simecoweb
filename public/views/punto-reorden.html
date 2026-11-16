@@ -1,0 +1,144 @@
+<div class="view" x-data="puntoReorden">
+  <section>
+    <p class="eyebrow">04 · Inventarios · simulación dinámica</p>
+    <h1>Punto de reorden con demanda variable</h1>
+    <p class="lede">Simula día a día un inventario cuya demanda es aleatoria. Decide cuánto inventario de seguridad mantener para no quedarte sin producto mientras llega el pedido.</p>
+  </section>
+
+  <div class="runbar" role="group" aria-label="Control de la simulación">
+    <button class="btn primary" type="button" @click="toggle()">
+      <svg x-show="state === 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/></svg>
+      <svg x-show="state !== 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"/></svg>
+      <span x-text="playLabel"></span>
+    </button>
+    <button class="btn" type="button" @click="stepOnce()" :disabled="state === 'done'">Avanzar 1 día</button>
+    <button class="btn" type="button" @click="restart()" :disabled="state === 'idle'">Reiniciar</button>
+    <label class="speed">Velocidad
+      <select x-model="speed" @change="setSpeed()"><option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select>
+    </label>
+    <div class="prog" aria-hidden="true"><span x-text="dayLabel"></span><div class="bar"><div :style="{ width: progress }"></div></div></div>
+    <span class="badge" role="status" :data-state="state" x-text="stateLabel"></span>
+  </div>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <div class="field">
+          <div class="frow"><label for="ro-d">Demanda diaria promedio (d̄)</label><output for="ro-d" x-text="params.d + ' u/día'"></output></div>
+          <input id="ro-d" type="range" min="1" max="200" step="1" x-model.number="params.d" aria-describedby="ro-d-h" :aria-valuetext="params.d + ' unidades por día'">
+          <p class="hint" id="ro-d-h">1–200 unidades por día</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="ro-sd">Variabilidad diaria (σ<sub>d</sub>)</label><output for="ro-sd" x-text="f.num(params.sd, 1) + ' u'"></output></div>
+          <input id="ro-sd" type="range" min="0" max="50" step="0.5" x-model.number="params.sd" aria-describedby="ro-sd-h" :aria-valuetext="params.sd + ' unidades'">
+          <p class="hint" id="ro-sd-h">0–50 unidades · desviación estándar (normal, Box-Muller)</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="ro-L">Tiempo de entrega (L)</label><output for="ro-L" x-text="params.L + ' días'"></output></div>
+          <input id="ro-L" type="range" min="1" max="30" step="1" x-model.number="params.L" aria-describedby="ro-L-h" :aria-valuetext="params.L + ' días'">
+          <p class="hint" id="ro-L-h">1–30 días</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="ro-ns">Nivel de servicio objetivo</label><output for="ro-ns" x-text="f.num(params.ns, 1) + ' % · z = ' + f.num(th?.z, 3)"></output></div>
+          <input id="ro-ns" type="range" min="50" max="99.9" step="0.1" x-model.number="params.ns" aria-describedby="ro-ns-h" :aria-valuetext="params.ns + ' por ciento'">
+          <p class="hint" id="ro-ns-h">50–99.9 % · probabilidad de no tener faltante en un ciclo</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="ro-Q">Tamaño de pedido (Q)</label><output for="ro-Q" x-text="f.int(params.Q) + ' u'"></output></div>
+          <input id="ro-Q" type="range" min="10" max="2000" step="10" x-model.number="params.Q" aria-describedby="ro-Q-h" :aria-valuetext="params.Q + ' unidades'">
+          <p class="hint" id="ro-Q-h">10–2,000 unidades · puedes usar el Q* de EOQ</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="ro-dias">Horizonte</label><output for="ro-dias" x-text="params.dias + ' días'"></output></div>
+          <input id="ro-dias" type="range" min="30" max="365" step="5" x-model.number="params.dias" aria-describedby="ro-dias-h" :aria-valuetext="params.dias + ' días'">
+          <p class="hint" id="ro-dias-h">30–365 días simulados</p>
+        </div>
+        <p class="hint">Cambiar un parámetro o la semilla reinicia la simulación.</p>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <dl class="kpis" aria-live="polite">
+        <div class="kpi"><dt>Inventario de seguridad</dt><dd><span x-text="f.num(th?.SS, 1)"></span> <small>unidades</small></dd></div>
+        <div class="kpi hl"><dt>Punto de reorden</dt><dd><span x-text="f.num(th?.ROP, 1)"></span> <small>unidades</small></dd></div>
+        <div class="kpi"><dt>Ciclos con faltante</dt><dd><span x-text="summary ? summary.stockoutCycles + ' de ' + summary.cycles : '—'"></span> <small x-text="summary ? 'simulado · objetivo ≤ ' + f.num(100 - params.ns, 1) + ' %' : 'al terminar la corrida'"></small></dd></div>
+        <div class="kpi"><dt>Tasa de surtido</dt><dd><span x-text="summary ? f.pct(summary.fillRate, 1) : '—'"></span> <small x-text="summary ? f.int(summary.lost) + ' u perdidas' : 'unidades atendidas'"></small></dd></div>
+      </dl>
+
+      <section class="card" aria-labelledby="ro-g">
+        <div class="chead"><h2 id="ro-g">Inventario disponible día a día</h2><span class="hint" x-text="'Semilla ' + seed"></span></div>
+        <div class="chart-box">
+          <canvas x-ref="chart" role="img" :aria-label="ariaChart"></canvas>
+          <div class="placeholder" x-show="state === 'idle'"><svg width="32" height="32" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="var(--accent-line)"/></svg><span>Pulsa <b>Iniciar</b> para simular <span x-text="params.dias"></span> días con la semilla <span x-text="seed"></span>.</span></div>
+        </div>
+        <ul class="legend">
+          <li><span class="sw" style="background: var(--c1)"></span>Inventario disponible</li>
+          <li><span class="sw dash" style="color: var(--warn-ink)"></span>Punto de reorden</li>
+          <li><span class="sw dash" style="color: var(--c3)"></span>Inventario de seguridad</li>
+          <li><svg width="12" height="10" viewBox="0 0 12 10" aria-hidden="true" style="margin-right: 6px"><path d="M6 10 L0 0 H12 Z" fill="currentColor"/></svg>Pedido colocado</li>
+          <li><span style="color: var(--accent-2); font-weight: 700; margin-right: 6px">×</span>Día con faltante</li>
+        </ul>
+        <details class="data">
+          <summary>Ver datos como tabla</summary>
+          <div class="tbl">
+            <table>
+              <thead><tr><th scope="col">Ciclo</th><th scope="col">Día pedido</th><th scope="col">Día llegada</th><th scope="col">Demanda en L</th><th scope="col">Mínimo</th><th scope="col">Días con faltante</th></tr></thead>
+              <tbody>
+                <template x-for="c in cyclesShown" :key="c.n">
+                  <tr><td x-text="c.n"></td><td x-text="c.day"></td><td x-text="c.arrival"></td><td x-text="c.leadDemand"></td><td x-text="c.min"></td><td x-text="c.shortDays"></td></tr>
+                </template>
+                <tr x-show="!cyclesShown.length"><td colspan="6">Aún no se completa ningún ciclo.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="card" aria-labelledby="ro-f">
+        <h2 id="ro-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="SS = z\,\sigma_d \sqrt{L}"></span>
+          <span data-tex="ROP = \bar{d}\,L + SS"></span>
+          <span data-tex="D_t \sim N(\bar{d}, \sigma_d)"></span>
+        </div>
+        <p class="note">Regla diaria: si inventario + pedidos en tránsito ≤ ROP, se pide Q; el pedido llega L días después. La demanda negativa se trunca a 0 y la no atendida se pierde.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>Un sistema de revisión continua con demanda aleatoria. El punto de reorden cubre la demanda esperada durante la entrega más un colchón para la incertidumbre.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>d̄, σ<sub>d</sub></dt><dd>Demanda típica por día y qué tanto varía.</dd></div>
+        <div><dt>L</dt><dd>Días de espera del proveedor: tiempo expuesto al riesgo.</dd></div>
+        <div><dt>Nivel de servicio</dt><dd>Qué tan seguro quieres estar de no tener faltantes; define z.</dd></div>
+        <div><dt>Q</dt><dd>Cuánto se pide cada vez.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>Más variabilidad o más L exigen más inventario de seguridad.</li>
+        <li>Pasar de 95 % a 99 % de servicio sube el SS cerca de 41 %.</li>
+        <li>Con σ = 0 el modelo vuelve al caso determinístico de EOQ.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>Configurar mínimos en el ERP, negociar tiempos de entrega más cortos, decidir qué productos merecen alto nivel de servicio y cuantificar el costo de una promesa de disponibilidad.</p>
+    </div>
+  </section>
+</div>

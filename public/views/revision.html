@@ -1,0 +1,159 @@
+<div class="view" x-data="revision">
+  <section>
+    <p class="eyebrow">05 · Inventarios · simulación dinámica</p>
+    <h1>Sistemas de revisión: continua vs. periódica</h1>
+    <p class="lede">Dos almacenes enfrentan exactamente la misma demanda aleatoria (misma semilla). Uno vigila su inventario todo el tiempo y pide una cantidad fija; el otro revisa cada R días y pide lo necesario para llegar a un nivel objetivo.</p>
+  </section>
+
+  <div class="runbar" role="group" aria-label="Control de la simulación">
+    <button class="btn primary" type="button" @click="toggle()">
+      <svg x-show="state === 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/></svg>
+      <svg x-show="state !== 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"/></svg>
+      <span x-text="playLabel"></span>
+    </button>
+    <button class="btn" type="button" @click="stepOnce()" :disabled="state === 'done'">Avanzar 1 día</button>
+    <button class="btn" type="button" @click="restart()" :disabled="state === 'idle'">Reiniciar</button>
+    <label class="speed">Velocidad
+      <select x-model="speed" @change="setSpeed()"><option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select>
+    </label>
+    <div class="prog" aria-hidden="true"><span x-text="dayLabel"></span><div class="bar"><div :style="{ width: progress }"></div></div></div>
+    <span class="badge" role="status" :data-state="state" x-text="stateLabel"></span>
+  </div>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <p class="group">Demanda y proveedor (comunes)</p>
+        <div class="field">
+          <div class="frow"><label for="rv-d">Demanda diaria promedio (d̄)</label><output for="rv-d" x-text="params.d + ' u/día'"></output></div>
+          <input id="rv-d" type="range" min="1" max="200" step="1" x-model.number="params.d" aria-describedby="rv-d-h" :aria-valuetext="params.d + ' unidades por día'">
+          <p class="hint" id="rv-d-h">1–200 unidades por día</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="rv-sd">Variabilidad diaria (σ<sub>d</sub>)</label><output for="rv-sd" x-text="f.num(params.sd, 1) + ' u'"></output></div>
+          <input id="rv-sd" type="range" min="0" max="50" step="0.5" x-model.number="params.sd" aria-describedby="rv-sd-h" :aria-valuetext="params.sd + ' unidades'">
+          <p class="hint" id="rv-sd-h">0–50 unidades</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="rv-L">Tiempo de entrega (L)</label><output for="rv-L" x-text="params.L + ' días'"></output></div>
+          <input id="rv-L" type="range" min="1" max="30" step="1" x-model.number="params.L" aria-describedby="rv-L-h" :aria-valuetext="params.L + ' días'">
+          <p class="hint" id="rv-L-h">1–30 días</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="rv-ns">Nivel de servicio</label><output for="rv-ns" x-text="f.num(params.ns, 1) + ' % · z = ' + f.num(th?.z, 3)"></output></div>
+          <input id="rv-ns" type="range" min="50" max="99.9" step="0.1" x-model.number="params.ns" aria-describedby="rv-ns-h" :aria-valuetext="params.ns + ' por ciento'">
+          <p class="hint" id="rv-ns-h">50–99.9 %</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="rv-dias">Horizonte</label><output for="rv-dias" x-text="params.dias + ' días'"></output></div>
+          <input id="rv-dias" type="range" min="30" max="365" step="5" x-model.number="params.dias" aria-describedby="rv-dias-h" :aria-valuetext="params.dias + ' días'">
+          <p class="hint" id="rv-dias-h">30–365 días</p>
+        </div>
+        <p class="group">Continua (s, Q)</p>
+        <div class="field">
+          <div class="frow"><label for="rv-Q">Cantidad fija por pedido (Q)</label><output for="rv-Q" x-text="f.int(params.Q) + ' u'"></output></div>
+          <input id="rv-Q" type="range" min="10" max="2000" step="10" x-model.number="params.Q" aria-describedby="rv-Q-h" :aria-valuetext="params.Q + ' unidades'">
+          <p class="hint" id="rv-Q-h">10–2,000 unidades</p>
+        </div>
+        <p class="group">Periódica (R, S)</p>
+        <div class="field">
+          <div class="frow"><label for="rv-R">Periodo de revisión (R)</label><output for="rv-R" x-text="params.R + ' días'"></output></div>
+          <input id="rv-R" type="range" min="1" max="60" step="1" x-model.number="params.R" aria-describedby="rv-R-h" :aria-valuetext="params.R + ' días'">
+          <p class="hint" id="rv-R-h">1–60 días entre revisiones</p>
+        </div>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <div class="duo">
+        <section class="card" aria-labelledby="rv-c1">
+          <div class="chead"><h2 id="rv-c1">Continua</h2><span class="hint mono" x-text="'s = ' + f.num(th?.s, 1) + ' · Q = ' + params.Q"></span></div>
+          <p class="hint" style="margin-bottom: 8px">Pide siempre Q cuando la posición cae a s. Intervalos variables.</p>
+          <div class="chart-box sm">
+            <canvas x-ref="cont" role="img" :aria-label="ariaCont"></canvas>
+            <div class="placeholder" x-show="state === 'idle'"><span>Pulsa <b>Iniciar</b></span></div>
+          </div>
+        </section>
+        <section class="card" aria-labelledby="rv-c2">
+          <div class="chead"><h2 id="rv-c2">Periódica</h2><span class="hint mono" x-text="'R = ' + params.R + ' d · S = ' + f.num(th?.S, 1)"></span></div>
+          <p class="hint" style="margin-bottom: 8px">Revisa cada R días y pide S − posición. Cantidades variables.</p>
+          <div class="chart-box sm">
+            <canvas x-ref="per" role="img" :aria-label="ariaPer"></canvas>
+            <div class="placeholder" x-show="state === 'idle'"><span>Pulsa <b>Iniciar</b></span></div>
+          </div>
+        </section>
+      </div>
+      <ul class="legend" style="margin-top: -6px">
+        <li><span class="sw" style="background: var(--c1)"></span>Inventario · continua</li>
+        <li><span class="sw" style="background: var(--c2)"></span>Inventario · periódica</li>
+        <li><span class="sw dash" style="color: var(--warn-ink)"></span>s (punto de reorden) / S (nivel objetivo)</li>
+        <li><span class="sw dash" style="color: var(--line-2)"></span>Día de revisión</li>
+      </ul>
+
+      <section class="card" aria-labelledby="rv-t">
+        <h2 id="rv-t" style="margin-bottom: 8px">Comparación de resultados</h2>
+        <div class="tbl">
+          <table>
+            <caption x-text="done ? 'Mismos ' + params.dias + ' días de demanda, semilla ' + seed : 'Resultados disponibles al terminar la corrida (inventario de seguridad: teórico)'"></caption>
+            <thead><tr><th scope="col">Indicador</th><th scope="col">Continua (s, Q)</th><th scope="col">Periódica (R, S)</th></tr></thead>
+            <tbody>
+              <template x-for="(r, i) in rows" :key="r.label">
+                <tr x-show="done || i === 0">
+                  <th scope="row" style="text-align: left" x-text="r.label"></th>
+                  <td :class="{ win: r.wa }" x-text="r.a"></td>
+                  <td :class="{ win: r.wb }" x-text="r.b"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">En verde, la política con mejor resultado en ese indicador.</p>
+      </section>
+
+      <section class="card" aria-labelledby="rv-f">
+        <h2 id="rv-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="s = \bar{d}L + z\sigma_d\sqrt{L}"></span>
+          <span data-tex="S = \bar{d}(R + L) + z\sigma_d\sqrt{R + L}"></span>
+          <span data-tex="q_k = S - IP_k"></span>
+        </div>
+        <p class="note">IP = inventario a mano + en tránsito. La periódica protege R + L días, por eso necesita más inventario de seguridad.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>Dos políticas clásicas de reposición frente a la misma demanda aleatoria, para comparar inventario, faltantes y esfuerzo de control.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>s, Q</dt><dd>Continua: cuándo pedir (posición ≤ s) y cuánto (fijo).</dd></div>
+        <div><dt>R, S</dt><dd>Periódica: cada cuánto revisar y hasta qué nivel reponer.</dd></div>
+        <div><dt>d̄, σ, L, z</dt><dd>Demanda, incertidumbre, espera y nivel de servicio comunes.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>Un R mayor eleva S y el inventario promedio de la periódica.</li>
+        <li>Con σ alta, la continua reacciona antes y protege mejor por unidad de inventario.</li>
+        <li>Con R pequeño ambas políticas se parecen.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>La continua conviene para artículos caros o críticos (clase A) con escáner o ERP en tiempo real; la periódica, para consolidar pedidos con un proveedor, rutas de entrega fijas o tiendas con conteo semanal.</p>
+    </div>
+  </section>
+</div>

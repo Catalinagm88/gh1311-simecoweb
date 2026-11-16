@@ -1,0 +1,150 @@
+<div class="view" x-data="eoq">
+  <section>
+    <p class="eyebrow">03 · Inventarios</p>
+    <h1>Cantidad económica de pedido (EOQ)</h1>
+    <p class="lede">Calcula cuántas unidades conviene pedir cada vez para que la suma de costos de ordenar y de mantener inventario sea la mínima posible, y compárala con el lote que usas hoy.</p>
+  </section>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <div class="field">
+          <div class="frow"><label for="eo-D">Demanda anual (D)</label><output for="eo-D" x-text="f.int(params.D) + ' u/año'"></output></div>
+          <input id="eo-D" type="range" min="100" max="20000" step="100" x-model.number="params.D" aria-describedby="eo-D-h" :aria-valuetext="params.D + ' unidades por año'">
+          <p class="hint" id="eo-D-h">100–20,000 unidades por año</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="eo-S">Costo por pedido (S)</label><output for="eo-S" x-text="f.money(params.S, 0) + ' / pedido'"></output></div>
+          <input id="eo-S" type="range" min="1" max="500" step="1" x-model.number="params.S" aria-describedby="eo-S-h" :aria-valuetext="params.S + ' pesos por pedido'">
+          <p class="hint" id="eo-S-h">$1–$500 · trámite, flete fijo, recepción</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="eo-H">Costo de mantener (H)</label><output for="eo-H" x-text="f.money(params.H) + ' / u·año'"></output></div>
+          <input id="eo-H" type="range" min="0.1" max="50" step="0.1" x-model.number="params.H" aria-describedby="eo-H-h" :aria-valuetext="params.H + ' pesos por unidad al año'">
+          <p class="hint" id="eo-H-h">$0.10–$50 por unidad al año · almacén, capital, merma</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="eo-L">Tiempo de entrega (L)</label><output for="eo-L" x-text="params.L + ' días'"></output></div>
+          <input id="eo-L" type="range" min="0" max="60" step="1" x-model.number="params.L" aria-describedby="eo-L-h" :aria-valuetext="params.L + ' días'">
+          <p class="hint" id="eo-L-h">0–60 días · para el punto de reorden determinístico</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="eo-dias">Días por año</label><output for="eo-dias" x-text="params.dias + ' días'"></output></div>
+          <input id="eo-dias" type="range" min="250" max="365" step="1" x-model.number="params.dias" aria-describedby="eo-dias-h" :aria-valuetext="params.dias + ' días'">
+          <p class="hint" id="eo-dias-h">250–365 · días hábiles o naturales</p>
+        </div>
+        <p class="group">Comparar con tu política actual</p>
+        <div class="field">
+          <div class="frow"><label for="eo-Q">Lote actual (Q)</label><output for="eo-Q" x-text="f.int(params.Q) + ' u'"></output></div>
+          <input id="eo-Q" type="range" min="10" max="2000" step="10" x-model.number="params.Q" aria-describedby="eo-Q-h" :aria-valuetext="params.Q + ' unidades'">
+          <p class="hint" id="eo-Q-h">10–2,000 unidades por pedido</p>
+        </div>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <dl class="kpis" aria-live="polite">
+        <div class="kpi hl"><dt>Lote óptimo Q*</dt><dd><span x-text="f.num(out?.Qs, 1)"></span> <small>unidades</small></dd></div>
+        <div class="kpi"><dt>Pedidos por año N</dt><dd x-text="f.num(out?.N, 2)"></dd></div>
+        <div class="kpi"><dt>Tiempo entre pedidos</dt><dd><span x-text="f.num(out?.T, 1)"></span> <small>días</small></dd></div>
+        <div class="kpi"><dt>Costo total mínimo</dt><dd><span x-text="f.money(out?.TC)"></span> <small>por año</small></dd></div>
+        <div class="kpi"><dt>Punto de reorden</dt><dd><span x-text="f.num(out?.ROP, 1)"></span> <small>unidades (d·L)</small></dd></div>
+      </dl>
+
+      <div class="alert" :class="out?.verdict === 'ok' ? 'ok' : 'warn'" role="status" x-show="out">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7 V13 M12 16.5 V17"/></svg>
+        <span x-show="out?.verdict === 'ok'"><b>Tu lote está a menos de 5 % del óptimo.</b> Cuesta <span x-text="f.money(out?.current.total)"></span> al año.</span>
+        <span x-show="out?.verdict !== 'ok'">
+          <b x-text="'Tu lote de ' + f.int(params.Q) + ' u cuesta ' + f.money(out?.current.total) + ' al año'"></b>,
+          <span x-text="f.money(out?.delta) + ' (' + f.signedPct(out?.deltaPct) + ')'"></span> más que el óptimo.
+          <span x-show="out?.verdict === 'over'">Pides de más: el costo de mantener (<span x-text="f.money(out?.current.holding)"></span>) supera al de ordenar (<span x-text="f.money(out?.current.ordering)"></span>).</span>
+          <span x-show="out?.verdict === 'under'">Pides de menos: el costo de ordenar (<span x-text="f.money(out?.current.ordering)"></span>) supera al de mantener (<span x-text="f.money(out?.current.holding)"></span>).</span>
+          <button class="btn sm" type="button" style="margin-top: 8px" @click="useOptimal()">Usar Q* como lote actual</button>
+        </span>
+      </div>
+
+      <section class="card" aria-labelledby="eo-g">
+        <div class="chead"><h2 id="eo-g">Costo anual según tamaño de lote</h2></div>
+        <div class="chart-box"><canvas x-ref="cost" role="img" :aria-label="ariaCost"></canvas></div>
+        <ul class="legend">
+          <li><span class="sw" style="background: var(--c1)"></span>Costo total</li>
+          <li><span class="sw" style="background: var(--c2)"></span>Costo de ordenar D·S/Q</li>
+          <li><span class="sw dash" style="color: var(--c3)"></span>Costo de mantener H·Q/2</li>
+          <li><span class="box" style="background: var(--ink); border-radius: 50%"></span>Q* óptimo</li>
+          <li><span class="box" style="border: 2.5px solid var(--warn-ink); border-radius: 50%"></span>Lote actual</li>
+        </ul>
+        <details class="data">
+          <summary>Ver datos como tabla</summary>
+          <div class="tbl">
+            <table>
+              <thead><tr><th scope="col">Q</th><th scope="col">Ordenar</th><th scope="col">Mantener</th><th scope="col">Total</th></tr></thead>
+              <tbody>
+                <template x-for="row in out?.table || []" :key="row.Q">
+                  <tr><td x-text="f.num(row.Q, 1) + (row.optimal ? ' (Q*)' : '')"></td><td x-text="f.money(row.ordering)"></td><td x-text="f.money(row.holding)"></td><td x-text="f.money(row.total)"></td></tr>
+                </template>
+                <tr><td x-text="f.int(params.Q) + ' (actual)'"></td><td x-text="f.money(out?.current.ordering)"></td><td x-text="f.money(out?.current.holding)"></td><td x-text="f.money(out?.current.total)"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="card" aria-labelledby="eo-g2">
+        <div class="chead"><h2 id="eo-g2">Nivel de inventario con Q*</h2></div>
+        <div class="chart-box sm"><canvas x-ref="saw" role="img" :aria-label="ariaSaw"></canvas></div>
+        <ul class="legend">
+          <li><span class="sw" style="background: var(--c1)"></span>Inventario</li>
+          <li><span class="sw dash" style="color: var(--c3)"></span>Q*/2 (promedio)</li>
+          <li><span class="sw dash" style="color: var(--warn-ink)"></span>Punto de reorden</li>
+        </ul>
+      </section>
+
+      <section class="card" aria-labelledby="eo-f">
+        <h2 id="eo-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="Q^* = \sqrt{\dfrac{2DS}{H}}"></span>
+          <span data-tex="CT(Q) = \dfrac{DS}{Q} + \dfrac{HQ}{2}"></span>
+          <span data-tex="N = \dfrac{D}{Q^*}"></span>
+          <span data-tex="ROP = d \cdot L"></span>
+        </div>
+        <p class="note">Supuestos: demanda constante y conocida, entrega completa, sin faltantes ni descuentos. d = D / días por año.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>El dilema de pedir mucho (pocas órdenes, mucho inventario) o poco (inventario bajo, muchas órdenes). El EOQ encuentra el equilibrio donde ambos costos se igualan.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>D</dt><dd>Unidades que se venden o consumen en un año.</dd></div>
+        <div><dt>S</dt><dd>Costo fijo de colocar y recibir un pedido, sin importar su tamaño.</dd></div>
+        <div><dt>H</dt><dd>Costo de tener una unidad almacenada durante un año.</dd></div>
+        <div><dt>L</dt><dd>Días entre pedir y recibir.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>Q* crece con la raíz de D: cuadruplicar la demanda solo duplica el lote.</li>
+        <li>Subir S favorece lotes grandes; subir H, lotes chicos.</li>
+        <li>La curva es plana cerca del óptimo: errores pequeños en Q cuestan poco.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>Definir lotes de compra o de producción, negociar costos de flete, justificar la reducción de costos de preparación (filosofía lean) y estimar el capital inmovilizado en inventario.</p>
+    </div>
+  </section>
+</div>

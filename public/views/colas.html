@@ -1,0 +1,269 @@
+<div class="view" x-data="colas">
+  <section>
+    <p class="eyebrow">08 · Servicios y operaciones · simulación dinámica</p>
+    <h1>Teoría de colas y cuellos de botella</h1>
+    <p class="lede">Clientes que llegan al azar a un servicio con capacidad limitada. Mide utilización, tamaño de la fila y tiempo de espera, decide cuántos servidores conviene tener e identifica qué estación limita una línea.</p>
+  </section>
+
+  <div class="runbar" role="group" aria-label="Control de la simulación" x-show="!isSerie">
+    <button class="btn primary" type="button" @click="toggle()">
+      <svg x-show="state === 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/></svg>
+      <svg x-show="state !== 'running'" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"/></svg>
+      <span x-text="playLabel"></span>
+    </button>
+    <button class="btn" type="button" @click="stepOnce()" :disabled="state === 'done'">Avanzar 1 min</button>
+    <button class="btn" type="button" @click="restart()" :disabled="state === 'idle'">Reiniciar</button>
+    <label class="speed">Velocidad
+      <select x-model="speed" @change="setSpeed()"><option value="1">1×</option><option value="10">10×</option><option value="60">60×</option></select>
+    </label>
+    <div class="prog" aria-hidden="true"><span x-text="dayLabel"></span><div class="bar"><div :style="{ width: progress }"></div></div></div>
+    <span class="badge" role="status" :data-state="state" x-text="stateLabel"></span>
+  </div>
+
+  <section class="card" aria-labelledby="co-an" x-show="!isSerie">
+    <div class="chead"><h2 id="co-an">Sistema en vivo</h2><span class="hint">Cada círculo es un cliente · 1× = 1 minuto simulado por segundo</span></div>
+    <div class="tbl">
+      <svg class="svgbox" viewBox="0 0 1000 200" style="min-width: 620px" role="img" :aria-label="ariaAnim">
+        <g font-family="Inter, sans-serif" font-size="12" fill="var(--muted)">
+          <text x="20" y="20" x-text="'Llegadas λ = ' + f.num(params.lambda, 1) + '/h (Poisson)'"></text>
+          <text x="600" y="14" x-text="'Servidores μ = ' + f.num(params.mu, 1) + '/h c/u'"></text>
+        </g>
+        <path d="M20 100 H160" stroke="var(--line-2)" stroke-width="2" stroke-dasharray="4 4"/>
+        <circle cx="60" cy="100" r="14" fill="var(--surface)" stroke="var(--c1)" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <rect x="160" y="70" width="400" height="60" rx="30" fill="var(--surface-2)" stroke="var(--line)"/>
+        <circle cx="540" cy="100" r="12" fill="var(--c1)" x-show="showQ(0)"/>
+        <circle cx="510" cy="100" r="12" fill="var(--c1)" x-show="showQ(1)"/>
+        <circle cx="480" cy="100" r="12" fill="var(--c1)" x-show="showQ(2)"/>
+        <circle cx="450" cy="100" r="12" fill="var(--c1)" x-show="showQ(3)"/>
+        <circle cx="420" cy="100" r="12" fill="var(--c1)" x-show="showQ(4)"/>
+        <circle cx="390" cy="100" r="12" fill="var(--c1)" x-show="showQ(5)"/>
+        <circle cx="360" cy="100" r="12" fill="var(--c1)" x-show="showQ(6)"/>
+        <circle cx="330" cy="100" r="12" fill="var(--c1)" x-show="showQ(7)"/>
+        <circle cx="300" cy="100" r="12" fill="var(--c1)" x-show="showQ(8)"/>
+        <circle cx="270" cy="100" r="12" fill="var(--c1)" x-show="showQ(9)"/>
+        <circle cx="240" cy="100" r="12" fill="var(--c1)" x-show="showQ(10)"/>
+        <circle cx="210" cy="100" r="12" fill="var(--c1)" x-show="showQ(11)"/>
+        <g x-show="cEff > 0"><rect x="600" y="22" width="100" height="28" rx="6" :fill="busy(0) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="650" y="40" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(0) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(0) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 1"><rect x="600" y="56" width="100" height="28" rx="6" :fill="busy(1) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="650" y="74" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(1) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(1) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 2"><rect x="600" y="90" width="100" height="28" rx="6" :fill="busy(2) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="650" y="108" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(2) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(2) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 3"><rect x="600" y="124" width="100" height="28" rx="6" :fill="busy(3) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="650" y="142" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(3) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(3) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 4"><rect x="600" y="158" width="100" height="28" rx="6" :fill="busy(4) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="650" y="176" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(4) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(4) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 5"><rect x="710" y="22" width="100" height="28" rx="6" :fill="busy(5) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="760" y="40" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(5) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(5) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 6"><rect x="710" y="56" width="100" height="28" rx="6" :fill="busy(6) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="760" y="74" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(6) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(6) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 7"><rect x="710" y="90" width="100" height="28" rx="6" :fill="busy(7) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="760" y="108" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(7) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(7) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 8"><rect x="710" y="124" width="100" height="28" rx="6" :fill="busy(8) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="760" y="142" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(8) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(8) ? 'Atendiendo' : 'Libre'"></text></g>
+        <g x-show="cEff > 9"><rect x="710" y="158" width="100" height="28" rx="6" :fill="busy(9) ? 'var(--accent-2)' : 'var(--surface-3)'" stroke="var(--line-2)"/><text x="760" y="176" text-anchor="middle" font-size="11" font-weight="700" :fill="busy(9) ? '#FFFFFF' : 'var(--muted)'" x-text="busy(9) ? 'Atendiendo' : 'Libre'"></text></g>
+        <text x="180" y="150" font-family="JetBrains Mono, monospace" font-size="13" font-weight="600" fill="var(--ink-2)" x-text="'fila: ' + nq + (extraQ ? ' (+' + extraQ + ' fuera de vista)' : '')"></text>
+        <path d="M820 100 H980" stroke="var(--line-2)" stroke-width="2"/>
+        <path d="M980 100 l-10 -6 v12 z" fill="var(--line-2)"/>
+        <text x="830" y="90" font-family="Inter, sans-serif" font-size="12" fill="var(--muted)">Salidas</text>
+        <text x="830" y="125" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600" fill="var(--ink)" x-text="'atendidos: ' + served"></text>
+        <text x="20" y="192" font-family="Inter, sans-serif" font-size="12" fill="var(--muted)" x-text="'Reloj: ' + clock + (observed ? ' · W observado: ' + f.num(observed.W * 60, 1) + ' min' : '')"></text>
+      </svg>
+    </div>
+  </section>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <fieldset class="field">
+          <legend>Modelo</legend>
+          <div class="seg">
+            <label><input type="radio" name="co-mod" value="mm1" x-model="params.modelo">M/M/1</label>
+            <label><input type="radio" name="co-mod" value="mmc" x-model="params.modelo">M/M/c</label>
+            <label><input type="radio" name="co-mod" value="serie" x-model="params.modelo">Línea en serie</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <div class="frow"><label for="co-l">Tasa de llegada (λ)</label><output for="co-l" x-text="f.num(params.lambda, 1) + ' clientes/h'"></output></div>
+          <input id="co-l" type="range" min="0.1" max="30" step="0.1" x-model.number="params.lambda" aria-describedby="co-l-h" :aria-valuetext="params.lambda + ' clientes por hora'">
+          <p class="hint" id="co-l-h">0.1–30 por hora · llegadas Poisson</p>
+        </div>
+        <template x-if="!isSerie">
+          <div class="field">
+            <div class="frow"><label for="co-mu">Tasa de servicio por servidor (μ)</label><output for="co-mu" x-text="f.num(params.mu, 1) + ' clientes/h'"></output></div>
+            <input id="co-mu" type="range" min="0.1" max="30" step="0.1" x-model.number="params.mu" aria-describedby="co-mu-h" :aria-valuetext="params.mu + ' clientes por hora'">
+            <p class="hint" id="co-mu-h" x-text="'0.1–30 por hora · ' + f.num(60 / params.mu, 1) + ' min promedio por cliente'"></p>
+          </div>
+        </template>
+        <template x-if="params.modelo === 'mmc'">
+          <div class="field">
+            <div class="frow"><label for="co-c">Servidores (c)</label><output for="co-c" x-text="params.c"></output></div>
+            <input id="co-c" type="range" min="1" max="10" step="1" x-model.number="params.c" aria-describedby="co-c-h" :aria-valuetext="params.c + ' servidores'">
+            <p class="hint" id="co-c-h">1–10 servidores en paralelo</p>
+          </div>
+        </template>
+        <template x-if="isSerie">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <p class="group">Capacidad de cada estación</p>
+            <template x-for="(m, i) in params.mus" :key="i">
+              <div class="field">
+                <div class="frow"><label :for="'co-s' + i" x-text="stations[i]"></label><output :for="'co-s' + i" x-text="f.num(params.mus[i], 1) + ' /h'"></output></div>
+                <input :id="'co-s' + i" type="range" min="0.1" max="30" step="0.1" x-model.number="params.mus[i]" :aria-valuetext="params.mus[i] + ' clientes por hora'">
+              </div>
+            </template>
+            <div class="row">
+              <button class="btn sm" type="button" @click="params.mus.length < 5 &amp;&amp; (params.mus.push(6), onParams())" :disabled="params.mus.length >= 5">Agregar estación</button>
+              <button class="btn sm" type="button" @click="params.mus.length > 2 &amp;&amp; (params.mus.pop(), onParams())" :disabled="params.mus.length <= 2">Quitar estación</button>
+            </div>
+          </div>
+        </template>
+        <template x-if="!isSerie">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <p class="group">Costos para decidir</p>
+            <div class="field">
+              <div class="frow"><label for="co-cw">Costo de espera (C<sub>w</sub>)</label><output for="co-cw" x-text="f.money(params.Cw, 0) + ' / cliente·h'"></output></div>
+              <input id="co-cw" type="range" min="0" max="200" step="1" x-model.number="params.Cw" aria-describedby="co-cw-h" :aria-valuetext="params.Cw + ' pesos por cliente por hora'">
+              <p class="hint" id="co-cw-h">$0–$200 · pérdida por cliente en el sistema</p>
+            </div>
+            <div class="field">
+              <div class="frow"><label for="co-cs">Costo por servidor (C<sub>s</sub>)</label><output for="co-cs" x-text="f.money(params.Cs, 0) + ' / h'"></output></div>
+              <input id="co-cs" type="range" min="0" max="200" step="1" x-model.number="params.Cs" aria-describedby="co-cs-h" :aria-valuetext="params.Cs + ' pesos por hora'">
+              <p class="hint" id="co-cs-h">$0–$200 por hora</p>
+            </div>
+            <div class="field">
+              <div class="frow"><label for="co-hr">Horizonte simulado</label><output for="co-hr" x-text="params.horas + ' h'"></output></div>
+              <input id="co-hr" type="range" min="1" max="24" step="1" x-model.number="params.horas" aria-describedby="co-hr-h" :aria-valuetext="params.horas + ' horas'">
+              <p class="hint" id="co-hr-h">1–24 horas de operación</p>
+            </div>
+          </div>
+        </template>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <template x-if="!isSerie">
+        <div style="display: flex; flex-direction: column; gap: 20px">
+          <div class="alert warn" role="alert" x-show="out &amp;&amp; !out.stable">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7 V13 M12 16.5 V17"/></svg>
+            <span><b>Sistema inestable: la fila crece sin límite.</b> La utilización ρ = <span x-text="f.num(out?.rho, 2)"></span> es ≥ 1. Aumenta μ, agrega servidores o reduce λ.</span>
+          </div>
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi" :class="out?.stable ? 'hl' : 'warn'"><dt>Utilización ρ</dt><dd x-text="f.num(out?.rho, 2)"></dd></div>
+            <div class="kpi"><dt>En el sistema L</dt><dd x-text="out?.stable ? f.num(out.L, 2) : '∞'"></dd></div>
+            <div class="kpi"><dt>En la fila L<sub>q</sub></dt><dd x-text="out?.stable ? f.num(out.Lq, 2) : '∞'"></dd></div>
+            <div class="kpi"><dt>Tiempo total W</dt><dd><span x-text="out?.stable ? f.num(out.W * 60, 1) : '∞'"></span> <small>min</small></dd></div>
+            <div class="kpi"><dt>Espera W<sub>q</sub></dt><dd><span x-text="out?.stable ? f.num(out.Wq * 60, 1) : '∞'"></span> <small>min</small></dd></div>
+            <div class="kpi"><dt>Costo total</dt><dd><span x-text="out?.stable ? f.money(out.cost, 2) : '∞'"></span> <small>por hora</small></dd></div>
+          </dl>
+          <div class="alert ok" role="status" x-show="verdict">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ok-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 L10 18 L20 6"/></svg>
+            <span x-text="verdict?.text"></span>
+          </div>
+          <div class="alert info" role="status" x-show="observed">
+            <span><b>Simulación terminada:</b> L observado <span x-text="f.num(observed?.L, 2)"></span>, L<sub>q</sub> <span x-text="f.num(observed?.Lq, 2)"></span>, W<sub>q</sub> <span x-text="f.num((observed?.Wq || 0) * 60, 1)"></span> min, <span x-text="observed?.served"></span> clientes atendidos en <span x-text="params.horas"></span> h. Con pocas horas la muestra es pequeña: alarga el horizonte para acercarte a la teoría.</span>
+          </div>
+
+          <div class="duo">
+            <section class="card" aria-labelledby="co-g1">
+              <div class="chead"><h2 id="co-g1">Clientes en el sistema vs. ρ</h2></div>
+              <div class="chart-box sm"><canvas x-ref="rho" role="img" :aria-label="ariaRho"></canvas></div>
+              <ul class="legend"><li><span class="sw" style="background: var(--c1)"></span>L teórico M/M/1</li><li><span class="box" style="background: var(--accent-2); border-radius: 50%"></span>Sistema actual</li></ul>
+            </section>
+            <section class="card" aria-labelledby="co-g2">
+              <div class="chead"><h2 id="co-g2">Longitud de la fila en el tiempo</h2></div>
+              <div class="chart-box sm">
+                <canvas x-ref="q" role="img" :aria-label="ariaQ"></canvas>
+                <div class="placeholder" x-show="state === 'idle'"><span>Pulsa <b>Iniciar</b></span></div>
+              </div>
+              <ul class="legend"><li><span class="sw" style="background: var(--c1)"></span>Fila simulada</li><li><span class="sw dash" style="color: var(--accent-2)"></span>L<sub>q</sub> teórico</li></ul>
+            </section>
+          </div>
+
+          <section class="card" aria-labelledby="co-t">
+            <h2 id="co-t" style="margin-bottom: 8px">¿Cuántos servidores conviene tener?</h2>
+            <details class="data" open>
+              <summary>Ver costos por número de servidores</summary>
+              <div class="tbl">
+                <table>
+                  <thead><tr><th scope="col">Servidores</th><th scope="col">ρ</th><th scope="col">L</th><th scope="col">W<sub>q</sub> (min)</th><th scope="col">Costo / h</th></tr></thead>
+                  <tbody>
+                    <template x-for="r in out?.costs.slice(0, 6) || []" :key="r.c">
+                      <tr><td x-text="r.c"></td><td x-text="f.num(params.lambda / (r.c * params.mu), 2)"></td><td x-text="r.stable ? f.num(r.L, 2) : '∞'"></td><td x-text="r.stable ? f.num(r.Wq * 60, 1) : '∞'"></td><td :class="{ win: out?.best?.c === r.c }" x-text="r.stable ? f.money(r.cost) : 'inestable'"></td></tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+        </div>
+      </template>
+
+      <template x-if="isSerie">
+        <div style="display: flex; flex-direction: column; gap: 20px">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi warn"><dt>Cuello de botella</dt><dd x-text="stations[out?.serie.bottleneck] || '—'" style="font-size: 18px"></dd></div>
+            <div class="kpi"><dt>Capacidad de la línea</dt><dd><span x-text="f.num(out?.serie.capacity, 1)"></span> <small>clientes/h</small></dd></div>
+            <div class="kpi"><dt>Flujo de salida</dt><dd><span x-text="f.num(out?.serie.throughput, 1)"></span> <small>clientes/h</small></dd></div>
+            <div class="kpi"><dt>Utilización máxima</dt><dd x-text="f.num(Math.max(...(out?.serie.rhos || [0])), 2)"></dd></div>
+          </dl>
+          <div class="alert warn" role="alert" x-show="out &amp;&amp; !out.serie.stable"><span><b>La línea no da abasto:</b> llegan <span x-text="f.num(params.lambda, 1)"></span>/h pero el cuello de botella solo procesa <span x-text="f.num(out?.serie.capacity, 1)"></span>/h. La fila frente a esa estación crece sin límite.</span></div>
+          <section class="card" aria-labelledby="co-s">
+            <div class="chead"><h2 id="co-s">Línea en serie: ¿dónde está el cuello de botella?</h2><span class="hint" x-text="'λ = ' + f.num(params.lambda, 1) + '/h'"></span></div>
+            <ol class="board" style="list-style: none; padding: 0; margin: 0" aria-label="Estaciones de la línea">
+              <template x-for="(m, i) in params.mus" :key="'st' + i">
+                <li class="node" :class="{ me: out?.serie.bottleneck === i }">
+                  <h3><span x-text="stations[i]"></span><span class="you" x-show="out?.serie.bottleneck === i">Cuello</span></h3>
+                  <dl class="stats">
+                    <div><dt>Capacidad μ</dt><dd x-text="f.num(m, 1) + '/h'"></dd></div>
+                    <div><dt>Utilización ρ</dt><dd :class="{ bad: out?.serie.rhos[i] >= 1 }" x-text="f.num(out?.serie.rhos[i], 2)"></dd></div>
+                  </dl>
+                  <div class="bar" role="img" :aria-label="'Utilización ' + Math.round(Math.min(1, out?.serie.rhos[i] || 0) * 100) + ' por ciento'"><div :style="{ width: Math.min(100, (out?.serie.rhos[i] || 0) * 100) + '%', background: out?.serie.bottleneck === i ? 'var(--accent-2)' : 'var(--seq-2)' }"></div></div>
+                </li>
+              </template>
+            </ol>
+            <p class="note">Capacidad de la línea = min(μ<sub>i</sub>). Mejorar una estación que no es el cuello de botella no aumenta el flujo; solo mejorar el cuello lo hace.</p>
+          </section>
+        </div>
+      </template>
+
+      <section class="card" aria-labelledby="co-f">
+        <h2 id="co-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="\rho = \dfrac{\lambda}{c\,\mu}"></span>
+          <span data-tex="L = \lambda W \;\text{(Little)}"></span>
+          <span data-tex="L = \dfrac{\rho}{1 - \rho}"></span>
+          <span data-tex="W = \dfrac{1}{\mu - \lambda}"></span>
+          <span data-tex="L_q = \dfrac{\rho^2}{1 - \rho}"></span>
+          <span data-tex="CT = c\,C_s + L\,C_w"></span>
+        </div>
+        <p class="note">M/M/1 en estado estable (requiere ρ &lt; 1). M/M/c usa Erlang C para P<sub>0</sub> y L<sub>q</sub>. Línea en serie: capacidad = min(μ<sub>i</sub>).</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>Una fila con llegadas y servicios aleatorios: cajas de banco, call centers, ventanillas, talleres. Compara la teoría con una simulación por eventos discretos con semilla.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>λ</dt><dd>Clientes que llegan por hora, en promedio.</dd></div>
+        <div><dt>μ, c</dt><dd>Clientes que atiende cada servidor por hora y cuántos servidores hay.</dd></div>
+        <div><dt>C<sub>w</sub>, C<sub>s</sub></dt><dd>Lo que cuesta que un cliente espere y lo que cuesta un servidor más.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>Cerca de ρ = 1 la fila crece de forma explosiva.</li>
+        <li>Pasar de 80 % a 90 % de ocupación más que duplica la espera.</li>
+        <li>En una línea, solo el cuello de botella fija la producción.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>Dimensionar personal por turno, fijar metas de tiempo de atención, decidir inversiones en capacidad y aplicar la teoría de restricciones para enfocar las mejoras donde sí aumentan el flujo.</p>
+    </div>
+  </section>
+</div>

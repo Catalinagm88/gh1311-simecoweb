@@ -1,0 +1,73 @@
+/* SimulacionEcoWeb · tokens de diseño (fuente: artboard «Tokens») */
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url(../vendor/fonts/inter-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url(../vendor/fonts/inter-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url(../vendor/fonts/inter-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url(../vendor/fonts/inter-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 500; font-display: swap; src: url(../vendor/fonts/space-grotesk-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 600; font-display: swap; src: url(../vendor/fonts/space-grotesk-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: swap; src: url(../vendor/fonts/space-grotesk-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(../vendor/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 600; font-display: swap; src: url(../vendor/fonts/jetbrains-mono-latin-600-normal.woff2) format('woff2'); }
+
+:root {
+  color-scheme: light;
+  --bg: #F4F6F9; --surface: #FFFFFF; --surface-2: #F7F9FC; --surface-3: #EEF2F7;
+  --ink: #14213D; --ink-2: #3D475C; --muted: #5A6478;
+  --line: #DDE2EA; --line-2: #CBD3DF;
+  --accent: #0B6A88; --accent-ink: #084E64; --accent-soft: #DCEEF4; --accent-line: #9CC9DA;
+  --accent-2: #C2410C; --warn-ink: #8A3B0A; --warn-soft: #FDF1E4; --warn-line: #F1C99E;
+  --ok-ink: #14532D; --ok-soft: #E7F3EC; --ok-line: #B9DCC6;
+  --idle-soft: #EEF2F7; --idle-ink: #3D475C;
+  --header: #14213D; --header-2: #1C2B4D; --header-line: #3A4C74; --header-ink: #CFE3F0; --header-pill: #24345A;
+  --biz: #14213D; --biz-ink: #D6DDEA;
+  /* series de gráficas */
+  --c1: #0B6A88; --c2: #C2410C; --c3: #6D5BD0; --c4: #8A94A8;
+  --seq-1: #9CC9DA; --seq-2: #4FA3C0; --seq-3: #0B6A88; --seq-4: #14213D;
+  --fill-1: rgba(11, 106, 136, 0.14); --fill-2: rgba(194, 65, 12, 0.13);
+  --grid: #E6EBF2;
+  /* tipografía */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --fs-h1: clamp(28px, 3vw, 40px); --fs-h2: 18px; --fs-body: 15px; --fs-small: 12px; --fs-kpi: 24px;
+  /* espacio y forma */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+  --tap: 44px; --focus: 0 0 0 3px var(--accent);
+  --nav-w: 232px; --controls-w: 300px; --content-max: 1440px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E1626; --surface: #16213A; --surface-2: #1B2844; --surface-3: #22304F;
+    --ink: #E8EDF5; --ink-2: #C9D2E1; --muted: #A9B4C8;
+    --line: #2A3856; --line-2: #3A4C74;
+    --accent: #4FB3D4; --accent-ink: #9FD6EA; --accent-soft: #123247; --accent-line: #2D5F74;
+    --accent-2: #F08A4B; --warn-ink: #F7B98C; --warn-soft: #3A2414; --warn-line: #6B3E1C;
+    --ok-ink: #8FD3A8; --ok-soft: #12301F; --ok-line: #24573A;
+    --idle-soft: #22304F; --idle-ink: #C9D2E1;
+    --header: #0A1120; --header-2: #16213A; --header-line: #2A3856; --header-ink: #CFE3F0; --header-pill: #1B2844;
+    --biz: #1B2844; --biz-ink: #C9D2E1;
+    --c1: #4FB3D4; --c2: #F08A4B; --c3: #A79BF0; --c4: #A9B4C8;
+    --seq-1: #2D5F74; --seq-2: #3E8FAD; --seq-3: #4FB3D4; --seq-4: #CFE3F0;
+    --fill-1: rgba(79, 179, 212, 0.18); --fill-2: rgba(240, 138, 75, 0.18);
+    --grid: #22304F;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0E1626; --surface: #16213A; --surface-2: #1B2844; --surface-3: #22304F;
+  --ink: #E8EDF5; --ink-2: #C9D2E1; --muted: #A9B4C8;
+  --line: #2A3856; --line-2: #3A4C74;
+  --accent: #4FB3D4; --accent-ink: #9FD6EA; --accent-soft: #123247; --accent-line: #2D5F74;
+  --accent-2: #F08A4B; --warn-ink: #F7B98C; --warn-soft: #3A2414; --warn-line: #6B3E1C;
+  --ok-ink: #8FD3A8; --ok-soft: #12301F; --ok-line: #24573A;
+  --idle-soft: #22304F; --idle-ink: #C9D2E1;
+  --header: #0A1120; --header-2: #16213A; --header-line: #2A3856; --header-ink: #CFE3F0; --header-pill: #1B2844;
+  --biz: #1B2844; --biz-ink: #C9D2E1;
+  --c1: #4FB3D4; --c2: #F08A4B; --c3: #A79BF0; --c4: #A9B4C8;
+  --seq-1: #2D5F74; --seq-2: #3E8FAD; --seq-3: #4FB3D4; --seq-4: #CFE3F0;
+  --fill-1: rgba(79, 179, 212, 0.18); --fill-2: rgba(240, 138, 75, 0.18);
+  --grid: #22304F;
+}

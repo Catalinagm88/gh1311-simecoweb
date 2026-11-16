@@ -1,0 +1,151 @@
+<div class="view" x-data="interes">
+  <section>
+    <p class="eyebrow">02 · Finanzas</p>
+    <h1>Interés compuesto y decisiones financieras</h1>
+    <p class="lede">Compara cómo crece un capital con interés simple, compuesto y continuo, agrega aportaciones periódicas y decide entre dos opciones de inversión o financiamiento.</p>
+  </section>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <p class="group">Opción A</p>
+        <div class="field">
+          <div class="frow"><label for="in-P">Capital inicial (P)</label><output for="in-P" x-text="f.money(params.P, 0)"></output></div>
+          <input id="in-P" type="range" min="0" max="1000000" step="100" x-model.number="params.P" aria-describedby="in-P-h" :aria-valuetext="params.P + ' pesos'">
+          <p class="hint" id="in-P-h">$0–$1,000,000 · monto invertido hoy</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="in-r">Tasa nominal anual (r)</label><output for="in-r" x-text="f.num(params.r) + ' %'"></output></div>
+          <input id="in-r" type="range" min="0" max="30" step="0.25" x-model.number="params.r" aria-describedby="in-r-h" :aria-valuetext="params.r + ' por ciento anual'">
+          <p class="hint" id="in-r-h">0–30 % anual</p>
+        </div>
+        <fieldset class="field">
+          <legend>Capitalización (m)</legend>
+          <div class="seg">
+            <template x-for="o in mOptions" :key="'a' + o">
+              <label><input type="radio" name="in-m" :value="o" x-model="params.m"><span x-text="mLabels[o]"></span></label>
+            </template>
+          </div>
+        </fieldset>
+        <div class="field">
+          <div class="frow"><label for="in-t">Plazo (t)</label><output for="in-t" x-text="params.t + ' años'"></output></div>
+          <input id="in-t" type="range" min="1" max="40" step="1" x-model.number="params.t" aria-describedby="in-t-h" :aria-valuetext="params.t + ' años'">
+          <p class="hint" id="in-t-h">1–40 años</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="in-A">Aportación periódica (A)</label><output for="in-A" x-text="f.money(params.A, 0) + ' / periodo'"></output></div>
+          <input id="in-A" type="range" min="0" max="5000" step="50" x-model.number="params.A" aria-describedby="in-A-h" :aria-valuetext="params.A + ' pesos por periodo'">
+          <p class="hint" id="in-A-h">$0–$5,000 al final de cada periodo de capitalización</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="in-inf">Inflación esperada</label><output for="in-inf" x-text="f.num(params.inf) + ' %'"></output></div>
+          <input id="in-inf" type="range" min="0" max="15" step="0.25" x-model.number="params.inf" aria-describedby="in-inf-h" :aria-valuetext="params.inf + ' por ciento anual'">
+          <p class="hint" id="in-inf-h">0–15 % anual · para calcular el valor real</p>
+        </div>
+        <p class="group">Opción B (mismo capital, plazo y aportación)</p>
+        <div class="field">
+          <div class="frow"><label for="in-rB">Tasa nominal B</label><output for="in-rB" x-text="f.num(params.rB) + ' %'"></output></div>
+          <input id="in-rB" type="range" min="0" max="30" step="0.25" x-model.number="params.rB" aria-describedby="in-rB-h" :aria-valuetext="params.rB + ' por ciento anual'">
+          <p class="hint" id="in-rB-h">0–30 % anual</p>
+        </div>
+        <fieldset class="field">
+          <legend>Capitalización B</legend>
+          <div class="seg">
+            <template x-for="o in mOptions" :key="'b' + o">
+              <label><input type="radio" name="in-mB" :value="o" x-model="params.mB"><span x-text="mLabels[o]"></span></label>
+            </template>
+          </div>
+        </fieldset>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <dl class="kpis" aria-live="polite">
+        <div class="kpi hl"><dt>Valor futuro A</dt><dd x-text="f.money(out?.FV, 0)"></dd></div>
+        <div class="kpi"><dt>Con interés simple</dt><dd x-text="f.money(out?.simple, 0)"></dd></div>
+        <div class="kpi"><dt>Tasa efectiva anual A</dt><dd x-text="f.pct(out?.TEA)"></dd></div>
+        <div class="kpi"><dt>Valor real (hoy)</dt><dd><span x-text="f.money(out?.real, 0)"></span> <small x-text="'descontando ' + f.num(params.inf) + ' % de inflación'"></small></dd></div>
+      </dl>
+
+      <div class="alert ok" role="status" x-show="out">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ok-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 L10 18 L20 6"/></svg>
+        <span>
+          <template x-if="out && out.diff < 0.005"><b>Ambas opciones rinden lo mismo.</b></template>
+          <template x-if="out && out.diff >= 0.005"><span><b x-text="'Conviene la opción ' + out.best + ':'"></b> genera <span x-text="f.money(out.diff, 0)"></span> más (TEA <span x-text="f.pct(out.TEA)"></span> vs. <span x-text="f.pct(out.TEAB)"></span>).</span></template>
+          <span x-show="Number.isFinite(out?.doubling)"> El capital de A se duplica en <span x-text="f.num(out?.doubling, 1)"></span> años (regla del 72: ≈ <span x-text="f.num(out?.rule72, 1)"></span>).</span>
+          <span x-show="params.m === 'inf' &amp;&amp; params.A > 0"> Con capitalización continua, la aportación se aproxima con capitalización diaria.</span>
+        </span>
+      </div>
+
+      <section class="card" aria-labelledby="in-g">
+        <div class="chead"><h2 id="in-g">Crecimiento del capital</h2></div>
+        <div class="chart-box"><canvas x-ref="chart" role="img" :aria-label="ariaChart"></canvas></div>
+        <ul class="legend">
+          <li><span class="sw" style="background: var(--c1)"></span>A · <span x-text="mLabels[params.m]?.toLowerCase()"></span> <span x-text="f.num(params.r) + ' %'"></span></li>
+          <li><span class="sw dash" style="color: var(--c2)"></span>B · <span x-text="mLabels[params.mB]?.toLowerCase()"></span> <span x-text="f.num(params.rB) + ' %'"></span></li>
+          <li><span class="sw dash" style="color: var(--c4)"></span>A · interés simple</li>
+        </ul>
+        <details class="data">
+          <summary>Ver datos como tabla</summary>
+          <div class="tbl">
+            <table>
+              <thead><tr><th scope="col">Año</th><th scope="col">Simple</th><th scope="col">Compuesto A</th><th scope="col">Opción B</th></tr></thead>
+              <tbody>
+                <template x-for="row in tableRows" :key="row.y">
+                  <tr><td x-text="row.y"></td><td x-text="f.money(row.simple, 0)"></td><td x-text="f.money(row.a, 0)"></td><td x-text="f.money(row.b, 0)"></td></tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="card" aria-labelledby="in-f">
+        <h2 id="in-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="VF = P\left(1 + \tfrac{r}{m}\right)^{mt}"></span>
+          <span data-tex="VF_{cont} = P\,e^{rt}"></span>
+          <span data-tex="TEA = \left(1 + \tfrac{r}{m}\right)^{m} - 1"></span>
+          <span data-tex="VF_A = A\,\dfrac{(1+i)^{n} - 1}{i}"></span>
+        </div>
+        <p class="note">Con i = r/m y n = m·t. El valor real divide el VF entre (1 + inflación)<sup>t</sup>.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>El valor del dinero en el tiempo: los intereses que se reinvierten generan a su vez intereses. Compara dos alternativas con el mismo capital y plazo.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>P, t</dt><dd>Cuánto inviertes y por cuánto tiempo.</dd></div>
+        <div><dt>r, m</dt><dd>Tasa nominal y cuántas veces al año se capitaliza.</dd></div>
+        <div><dt>A</dt><dd>Ahorro o pago fijo que se suma cada periodo (anualidad).</dd></div>
+        <div><dt>Inflación</dt><dd>Pérdida de poder adquisitivo del dinero futuro.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>El plazo pesa más que la tasa: el crecimiento es exponencial.</li>
+        <li>Capitalizar más seguido sube la TEA, con rendimientos decrecientes hasta el límite continuo.</li>
+        <li>Si la inflación supera la tasa, el valor real cae.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>Comparar créditos e inversiones por su tasa efectiva, planear fondos de reposición de equipo, evaluar pagar de contado o a plazos y comunicar el costo real de un financiamiento.</p>
+    </div>
+  </section>
+</div>

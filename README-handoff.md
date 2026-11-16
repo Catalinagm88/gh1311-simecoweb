@@ -1,9 +1,9 @@
-# SimEco Web — README de handoff (diseño → implementación)
+# SimulacionEcoWeb — README de handoff (diseño → implementación)
 
 Documento para que **Claude Code Web** implemente la aplicación a partir de los mockups.
 Mockups (lienzo Claude Design): https://claude.ai/artifact/SFWtHxkUwfb4d8KyZK2pMY
 
-SimEco es una aplicación web educativa, gratuita y responsiva, con 8 simulaciones económicas
+SimulacionEcoWeb es una aplicación web educativa, gratuita y responsiva, con 8 simulaciones económicas
 dinámicas. Cada simulación explica **qué simula**, el **significado de sus parámetros**, los
 **efectos** de moverlos y su **utilidad en los negocios** (ver bloque «explain» de cada mockup).
 
@@ -20,7 +20,7 @@ dinámicas. Cada simulación explica **qué simula**, el **significado de sus pa
 | Estructura / UI | HTML5 semántico | Estándar vivo | Lo que genera Claude Design; no requiere compilación. |
 | Estilos | CSS nativo (variables CSS, nesting, container queries, `clamp()`) | CSS actual (navegadores modernos) | Responsivo sin Tailwind. Los tokens de diseño pasan directo a variables CSS. |
 | Lógica de simulación | JavaScript ES2022, módulos ES (`<script type="module">`) | ES2022 | Cada simulación es un módulo puro (entradas → salidas), fácil de probar. Sin bundler. |
-| Reactividad de controles | Alpine.js | **3.17.x — fijar el último parche exacto** (p. ej. `3.17.N`, verificar con `npm view alpinejs@3.17 version`) | `x-data` / `x-model` ligan sliders al estado desde el HTML. |
+| Reactividad de controles | Alpine.js | **3.17.5** (último parche de la 3.17, fijado) | `x-data` / `x-model` ligan sliders al estado desde el HTML. |
 | Gráficas | Chart.js, build UMD `chart.umd.min.js` | **4.5.1** | El UMD no tiene dependencias (el ESM importa `@kurkle/color`). |
 | Fórmulas | KaTeX | **0.19.1** | EOQ, ROP, interés, Little, M/M/1 sin servidor. |
 | Animaciones / diagramas | SVG nativo + `requestAnimationFrame` | Estándar | Cadena del Beer Game/bullwhip y entidades en la cola. |
@@ -42,7 +42,7 @@ dinámicas. Cada simulación explica **qué simula**, el **significado de sus pa
   Parámetros como query dentro del hash: `#/eoq?D=1200&S=50&H=2`.
 - Librerías **vendorizadas** en `public/vendor/` con su versión en el nombre de carpeta
   (`public/vendor/chartjs-4.5.1/chart.umd.min.js`, `public/vendor/katex-0.19.1/…`,
-  `public/vendor/alpinejs-3.17.N/cdn.min.js`). Nada se carga de CDN en producción.
+  `public/vendor/alpinejs-3.17.5/module.esm.min.js`). Nada se carga de CDN en producción.
 - Los módulos de `js/sims/` son **puros**: no tocan DOM, `window`, `Math.random` ni `Date`.
   Toda aleatoriedad entra por un PRNG creado con la semilla.
 
@@ -186,7 +186,7 @@ KPIs: P*, Q*, CS, PS (+ DWL y recaudación si t > 0).
 
 | Parámetro | Rango | Default | Unidad |
 |---|---|---|---|
-| `P` capital inicial | 100 – 1,000,000 | 10,000 | $ |
+| `P` capital inicial | 0 – 1,000,000 | 10,000 | $ |
 | `r` tasa nominal | 0 – 30 (0.25) | 8 | % anual |
 | `m` capitalización | {1, 2, 4, 12, 365, `inf`} | 12 | veces/año |
 | `t` plazo | 1 – 40 | 10 | años |
@@ -513,7 +513,7 @@ Otros estados: «Sistema inestable» (colas, ρ ≥ 1) en tarjeta `--warn`; «Es
 ```jsonc
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "simeco-web",
+  "name": "simulacionecoweb",
   "compatibility_date": "2026-11-01",
   // Solo assets: sin "main", no hay script de Worker.
   "assets": {
@@ -538,7 +538,7 @@ Rutas por hash ⇒ el servidor solo ve `/`; no se necesitan reglas SPA ni redire
 
 ```json
 {
-  "name": "simeco-web",
+  "name": "simulacionecoweb",
   "private": true,
   "type": "module",
   "scripts": {
@@ -561,7 +561,7 @@ Rutas por hash ⇒ el servidor solo ve `/`; no se necesitan reglas SPA ni redire
 | Non-production branch deploy command | `npx wrangler versions upload` |
 | Variables | ninguna (Node 24 se toma de `.node-version`) |
 
-URL pública: `https://simeco-web.<subdominio>.workers.dev`.
+URL pública: `https://simulacionecoweb.<subdominio>.workers.dev`.
 Despliegue manual alternativo desde una máquina local: `npx wrangler login` y luego
 `npx wrangler deploy`.
 **Alternativa Cloudflare Pages**: framework preset «None», build command vacío, output
@@ -636,3 +636,22 @@ botella (T33).
 **Móvil y estados** — A 390px: menú en hoja lateral con foco atrapado y cierre con Esc;
 parámetros en acordeón; runbar fija abajo con los 3 estados de la sección 2 (iconos con
 `aria-label`).
+
+---
+
+## 9. Estado de la implementación
+
+Implementado en `public/` (ver `README.md`). Decisiones tomadas al implementar:
+
+- Alpine se carga como módulo ES (`vendor/alpinejs-3.17.5/module.esm.min.js`) desde `js/app.js`;
+  Chart.js y KaTeX como scripts UMD con `defer`.
+- Las vistas parciales viven en `public/views/<slug>.html` y se cargan con `fetch`.
+- `<template x-for>` no funciona dentro de `<svg>`: las animaciones SVG usan elementos fijos con
+  `x-show`/atributos enlazados.
+- En los formularios, los sliders se procesan en `input` y los checkbox/radio/select en `change`.
+- «Paso» está habilitado también en estado Reiniciada (útil con `prefers-reduced-motion`).
+- Beer Game: el pedido de un eslabón llega al proveedor la semana siguiente (retraso de
+  información de 1 semana) y el envío tarda L semanas; con `S* = D̂·(L+1) + 8` el sistema sin
+  ruido queda en equilibrio exacto (T27).
+- Colas: la simulación por eventos discretos cubre M/M/1 y M/M/c; la línea en serie se resuelve
+  analíticamente.

@@ -1,0 +1,85 @@
+<div class="view">
+  <section class="hero">
+    <p class="eyebrow">SimulacionEcoWeb · laboratorio de simulación económica</p>
+    <h1>Mueve un parámetro.<br>Mira cómo reacciona el negocio.</h1>
+    <p class="lede">Ocho simulaciones interactivas sobre mercados, finanzas, inventarios, cadena de suministro y flujos de servicio. Cada una explica qué modela, qué significa cada parámetro, qué efecto tiene al cambiarlo y para qué sirve en una empresa.</p>
+    <div class="row" style="margin-top: 20px">
+      <a class="btn primary" href="#/eoq">Empezar con EOQ</a>
+      <a class="btn" href="#/beer-game">Jugar el Beer Game</a>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 14px" aria-labelledby="sims-h">
+    <h2 class="sec" id="sims-h">Simulaciones</h2>
+    <div class="cards">
+      <a class="simcard" href="#/oferta-demanda">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 4 L21 20"/><path d="M3 20 L21 4"/></svg></span>
+        <h3>Oferta y demanda</h3>
+        <p>Equilibrio de mercado, desplazamientos de curvas, impuestos y precios máximos.</p>
+        <span class="meta"><code>#/oferta-demanda</code><span>Mercados</span></span>
+      </a>
+      <a class="simcard" href="#/interes">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 20 C10 19 15 14 21 4"/><path d="M3 20 H21"/></svg></span>
+        <h3>Interés compuesto y decisiones financieras</h3>
+        <p>Simple vs. compuesto vs. continuo, aportaciones periódicas y comparación de opciones.</p>
+        <span class="meta"><code>#/interes</code><span>Finanzas</span></span>
+      </a>
+      <a class="simcard" href="#/eoq">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6 C8 18 16 18 21 6"/><circle cx="12" cy="15" r="2"/></svg></span>
+        <h3>Cantidad económica de pedido</h3>
+        <p>El tamaño de lote que minimiza el costo total de ordenar y mantener inventario.</p>
+        <span class="meta"><code>#/eoq</code><span>Inventarios</span></span>
+      </a>
+      <a class="simcard" href="#/punto-reorden">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5 L9 15 V5 L15 15 V5 L21 15"/><path d="M3 12 H21" stroke-dasharray="2 3"/></svg></span>
+        <h3>Punto de reorden con demanda variable</h3>
+        <p>Inventario de seguridad, nivel de servicio y riesgo de faltante con demanda aleatoria.</p>
+        <span class="meta"><code>#/punto-reorden</code><span class="tag">Dinámica</span></span>
+      </a>
+      <a class="simcard" href="#/revision">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7 V12 L15 14"/></svg></span>
+        <h3>Sistemas de revisión</h3>
+        <p>Política (s, Q) continua contra (R, S) periódica con la misma demanda y semilla.</p>
+        <span class="meta"><code>#/revision</code><span class="tag">Dinámica</span></span>
+      </a>
+      <a class="simcard" href="#/bullwhip">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 12 C5 11 6 13 8 12 C10 9 12 15 14 12 C16 6 19 18 22 12"/></svg></span>
+        <h3>Efecto látigo</h3>
+        <p>Cómo pequeñas variaciones en la demanda se amplifican al subir por la cadena.</p>
+        <span class="meta"><code>#/bullwhip</code><span class="tag">Dinámica</span></span>
+      </a>
+      <a class="simcard" href="#/beer-game">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="10" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><path d="M6 12 H10 M14 12 H18"/></svg></span>
+        <h3>Beer Game (simplificado)</h3>
+        <p>Juega un eslabón de la cadena semana a semana y compara tus costos con la política automática.</p>
+        <span class="meta"><code>#/beer-game</code><span class="tag">Juego</span></span>
+      </a>
+      <a class="simcard" href="#/colas">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="4" cy="12" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="12" r="2"/><rect x="18" y="8" width="4" height="8" rx="1"/></svg></span>
+        <h3>Teoría de colas y cuellos de botella</h3>
+        <p>M/M/1, M/M/c y líneas en serie: utilización, espera y la estación que limita el flujo.</p>
+        <span class="meta"><code>#/colas</code><span class="tag">Dinámica</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 14px" aria-labelledby="how-h">
+    <h2 class="sec" id="how-h">Cómo funciona</h2>
+    <div class="how">
+      <div class="card">
+        <h3>1 · Ajusta los parámetros</h3>
+        <p>Cada control indica su rango, unidad y valor actual. Las gráficas y los indicadores se recalculan al instante.</p>
+      </div>
+      <div class="card">
+        <h3>2 · Usa una semilla</h3>
+        <p>Las simulaciones aleatorias usan la semilla del encabezado (por defecto <code>42</code>): el mismo escenario siempre da el mismo resultado en clase.</p>
+      </div>
+      <div class="card">
+        <h3>3 · Guarda y comparte</h3>
+        <p>Guarda escenarios en este navegador o copia un enlace como <code>#/eoq?D=1200&amp;S=50&amp;H=2</code> para abrirlo con los mismos valores.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">SimulacionEcoWeb · Herramienta educativa gratuita. Los resultados son modelos simplificados con fines de aprendizaje.</p>
+</div>

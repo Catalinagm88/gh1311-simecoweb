@@ -1,0 +1,148 @@
+<div class="view" x-data="ofertaDemanda">
+  <section>
+    <p class="eyebrow">01 · Mercados</p>
+    <h1>Oferta y demanda</h1>
+    <p class="lede">Encuentra el precio y la cantidad de equilibrio de un mercado y observa cómo se desplazan cuando cambian los gustos, los costos o se aplica un impuesto.</p>
+  </section>
+
+  <div class="work">
+    <details class="card controls" open>
+      <summary>Parámetros <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"/></svg></summary>
+      <form class="body" @input="onParams($event)" @change="onParams($event)" @submit.prevent>
+        <p class="group">Demanda · Q<sub>d</sub> = a − b·P</p>
+        <div class="field">
+          <div class="frow"><label for="od-a">Demanda base (a)</label><output for="od-a" x-text="f.num(params.a, 0) + ' u'"></output></div>
+          <input id="od-a" type="range" min="20" max="200" step="1" x-model.number="params.a" aria-describedby="od-a-h" :aria-valuetext="params.a + ' unidades'">
+          <p class="hint" id="od-a-h">20–200 unidades · cantidad pedida si el precio fuera 0</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="od-b">Sensibilidad al precio (b)</label><output for="od-b" x-text="f.num(params.b, 1) + ' u/$'"></output></div>
+          <input id="od-b" type="range" min="0.5" max="5" step="0.1" x-model.number="params.b" aria-describedby="od-b-h" :aria-valuetext="params.b + ' unidades por peso'">
+          <p class="hint" id="od-b-h">0.5–5 · unidades que se dejan de comprar por cada $1</p>
+        </div>
+        <p class="group">Oferta · Q<sub>s</sub> = c + d·P</p>
+        <div class="field">
+          <div class="frow"><label for="od-c">Oferta base (c)</label><output for="od-c" x-text="f.num(params.c, 0) + ' u'"></output></div>
+          <input id="od-c" type="range" min="-50" max="100" step="1" x-model.number="params.c" aria-describedby="od-c-h" :aria-valuetext="params.c + ' unidades'">
+          <p class="hint" id="od-c-h">−50–100 unidades · refleja costos y tecnología</p>
+        </div>
+        <div class="field">
+          <div class="frow"><label for="od-d">Respuesta de la oferta (d)</label><output for="od-d" x-text="f.num(params.d, 1) + ' u/$'"></output></div>
+          <input id="od-d" type="range" min="0.5" max="5" step="0.1" x-model.number="params.d" aria-describedby="od-d-h" :aria-valuetext="params.d + ' unidades por peso'">
+          <p class="hint" id="od-d-h">0.5–5 · unidades extra ofrecidas por cada $1</p>
+        </div>
+        <p class="group">Intervención</p>
+        <div class="field">
+          <div class="frow"><label for="od-t">Impuesto por unidad (t)</label><output for="od-t" x-text="f.money(params.t)"></output></div>
+          <input id="od-t" type="range" min="0" max="20" step="0.5" x-model.number="params.t" aria-describedby="od-t-h" :aria-valuetext="params.t + ' pesos por unidad'">
+          <p class="hint" id="od-t-h">$0–$20 por unidad · lo paga el vendedor</p>
+        </div>
+        <label class="check"><input type="checkbox" x-model="params.usePmax"> Aplicar precio máximo</label>
+        <div class="field" x-show="params.usePmax">
+          <div class="frow"><label for="od-pmax">Precio máximo</label><output for="od-pmax" x-text="f.money(params.pmax)"></output></div>
+          <input id="od-pmax" type="range" min="0" max="100" step="0.5" x-model.number="params.pmax" aria-describedby="od-pmax-h" :aria-valuetext="params.pmax + ' pesos'">
+          <p class="hint" id="od-pmax-h">$0–$100 · tope legal al precio</p>
+        </div>
+        <div class="row">
+          <button class="btn sm" type="button" @click="shockDemand()">Shock: demanda +20 %</button>
+          <button class="btn sm" type="button" @click="shockCost()">Shock: costos +15 %</button>
+        </div>
+        <button class="btn" type="button" @click="resetParams()">Restablecer valores</button>
+      </form>
+    </details>
+
+    <div class="results">
+      <dl class="kpis" aria-live="polite">
+        <div class="kpi"><dt>Precio de equilibrio P*</dt><dd x-text="f.money(out?.Pc)"></dd></div>
+        <div class="kpi"><dt>Cantidad de equilibrio Q*</dt><dd><span x-text="f.num(out?.Q, 1)"></span> <small>unidades</small></dd></div>
+        <div class="kpi"><dt>Excedente del consumidor</dt><dd x-text="f.money(out?.CS, 1)"></dd></div>
+        <div class="kpi"><dt>Excedente del productor</dt><dd x-text="f.money(out?.PS, 1)"></dd></div>
+        <template x-if="params.t > 0">
+          <div class="kpi"><dt>Recaudación del impuesto</dt><dd x-text="f.money(out?.revenue, 1)"></dd></div>
+        </template>
+        <template x-if="params.t > 0">
+          <div class="kpi warn"><dt>Pérdida de eficiencia</dt><dd x-text="f.money(out?.DWL, 1)"></dd></div>
+        </template>
+      </dl>
+
+      <template x-if="params.t > 0">
+        <div class="alert info" role="status"><span>El comprador paga <b x-text="f.money(out?.Pc)"></b> y el vendedor recibe <b x-text="f.money(out?.Pv)"></b>. Sin impuesto se venderían <b x-text="f.num(out?.Q0, 1)"></b> unidades.</span></div>
+      </template>
+      <template x-if="out?.ceiling.active">
+        <div class="alert warn" role="status"><span><b>Escasez de <span x-text="f.num(out?.ceiling.shortage, 1)"></span> unidades:</b> con el tope de <span x-text="f.money(params.pmax)"></span> se demandan <span x-text="f.num(out?.ceiling.demanded, 1)"></span> pero solo se ofrecen <span x-text="f.num(out?.ceiling.supplied, 1)"></span>.</span></div>
+      </template>
+
+      <section class="card" aria-labelledby="od-g">
+        <div class="chead"><h2 id="od-g">Curvas de mercado</h2></div>
+        <div class="chart-box"><canvas x-ref="chart" role="img" :aria-label="ariaChart"></canvas></div>
+        <ul class="legend">
+          <li><span class="sw" style="background: var(--c1)"></span>Demanda</li>
+          <li><span class="sw" style="background: var(--c2)"></span>Oferta</li>
+          <li><span class="box" style="background: var(--fill-1)"></span>Excedente del consumidor</li>
+          <li><span class="box" style="background: var(--fill-2)"></span>Excedente del productor</li>
+          <li x-show="params.t > 0"><span class="sw dash" style="color: var(--c4)"></span>Oferta sin impuesto</li>
+          <li x-show="out?.ceiling.active"><span class="sw dash" style="color: var(--warn-ink)"></span>Precio máximo</li>
+        </ul>
+        <details class="data">
+          <summary>Ver datos como tabla</summary>
+          <div class="tbl">
+            <table>
+              <caption>Cantidades por precio</caption>
+              <thead><tr><th scope="col">Precio</th><th scope="col">Q demandada</th><th scope="col">Q ofrecida</th><th scope="col">Situación</th></tr></thead>
+              <tbody>
+                <template x-for="row in out?.table || []" :key="row.price">
+                  <tr><td x-text="f.money(row.price)"></td><td x-text="f.num(row.demanded, 1)"></td><td x-text="f.num(row.supplied, 1)"></td><td x-text="row.status"></td></tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="card" aria-labelledby="od-f">
+        <h2 id="od-f" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+        <div class="math">
+          <span data-tex="P^* = \dfrac{a - c}{b + d}"></span>
+          <span data-tex="Q^* = a - b\,P^*"></span>
+          <span data-tex="P_c = \dfrac{a - c + d\,t}{b + d}"></span>
+          <span data-tex="EC = \tfrac{1}{2}\left(\tfrac{a}{b} - P_c\right) Q^*"></span>
+        </div>
+        <p class="note">P<sub>c</sub> es el precio que paga el comprador con impuesto t; el vendedor recibe P<sub>c</sub> − t.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="explain" x-data="{ tab: 0 }" aria-label="Explicación de la simulación">
+    <div class="tabbar" role="tablist" aria-label="Secciones de la explicación">
+      <button type="button" role="tab" :aria-selected="tab === 0" @click="tab = 0">Qué simula</button>
+      <button type="button" role="tab" :aria-selected="tab === 1" @click="tab = 1">Parámetros</button>
+      <button type="button" role="tab" :aria-selected="tab === 2" @click="tab = 2">Efectos</button>
+      <button type="button" role="tab" :aria-selected="tab === 3" @click="tab = 3">Negocio</button>
+    </div>
+    <div class="card" :class="{ active: tab === 0 }">
+      <h3>¿Qué simula?</h3>
+      <p>Un mercado competitivo con demanda y oferta lineales. El cruce de ambas curvas fija el precio donde lo que se quiere comprar es igual a lo que se quiere vender.</p>
+    </div>
+    <div class="card" :class="{ active: tab === 1 }">
+      <h3>Parámetros</h3>
+      <dl>
+        <div><dt>a, b</dt><dd>Tamaño del mercado y qué tanto reacciona el comprador al precio (elasticidad).</dd></div>
+        <div><dt>c, d</dt><dd>Capacidad base de los productores y qué tanto aumentan la producción si sube el precio.</dd></div>
+        <div><dt>t</dt><dd>Impuesto por unidad que separa el precio del comprador del que recibe el vendedor.</dd></div>
+      </dl>
+    </div>
+    <div class="card" :class="{ active: tab === 2 }">
+      <h3>Efectos al moverlos</h3>
+      <ul>
+        <li>Subir <b>a</b> desplaza la demanda: suben P* y Q*.</li>
+        <li>Bajar <b>c</b> (costos más altos) sube P* y baja Q*.</li>
+        <li>Un impuesto reduce Q* y crea pérdida de eficiencia.</li>
+        <li>Un precio máximo bajo P* genera escasez.</li>
+      </ul>
+    </div>
+    <div class="card biz" :class="{ active: tab === 3 }">
+      <h3>Utilidad en los negocios</h3>
+      <p>Fijar precios, anticipar el impacto de un nuevo competidor o de un aumento en insumos, y estimar cuánto de un impuesto se puede trasladar al cliente.</p>
+    </div>
+  </section>
+</div>
