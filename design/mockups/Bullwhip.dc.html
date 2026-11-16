@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Efecto látigo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:14px}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:600}
+.check input{width:20px;height:20px;accent-color:#0B6A88}
+.runbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:10px 12px}
+.speed{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.speed select{min-height:40px;border-radius:8px;border:1px solid #CBD3DF;padding:0 8px;font:600 13px Inter,sans-serif;background:#FFFFFF;color:#14213D}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px}
+.prog{flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#5A6478;font-family:'JetBrains Mono',monospace}
+.bar{height:6px;background:#E6EBF2;border-radius:3px;overflow:hidden}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0}
+.kpi{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:#5A6478;font-weight:600}
+.kpi dd{margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#14213D;line-height:1.2}
+.kpi small{display:block;font-size:12px;color:#5A6478;font-family:Inter,sans-serif;font-weight:500}
+.kpi.hl{background:#14213D;border-color:#14213D}
+.kpi.hl dt,.kpi.hl small{color:#CFE3F0}
+.kpi.hl dd{color:#FFFFFF}
+.chead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;font-weight:600;color:#0B6A88;min-height:32px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/bullwhip?mu=100&amp;sd=10&amp;L=2&amp;p=4&amp;info=0&amp;sem=52&amp;seed=42</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <label class="seed" for="seed">Semilla <input id="seed" type="number" value="42" inputmode="numeric"></label>
+      <button class="btn dark sm" type="button">Guardar escenario</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html" aria-current="page"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">06 · Cadena de suministro · simulación dinámica</p>
+        <h1>Efecto látigo (bullwhip effect)</h1>
+        <p class="lede">Una cadena de cuatro eslabones donde cada uno pronostica a partir de los pedidos que recibe. Observa cómo una demanda estable del consumidor se convierte en pedidos cada vez más erráticos hacia la fábrica.</p>
+      </section>
+
+      <div class="runbar" role="group" aria-label="Control de la simulación">
+        <button class="btn primary" type="button">
+          <sc-if value="{{ running }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect></svg></sc-if>
+          <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg></sc-if>
+          {{ playLabel }}
+        </button>
+        <button class="btn" type="button">Avanzar 1 semana</button>
+        <button class="btn" type="button">Reiniciar</button>
+        <label class="speed" for="vel">Velocidad
+          <select id="vel"><option>0.5×</option><option selected>1×</option><option>2×</option><option>4×</option></select>
+        </label>
+        <div class="prog" aria-label="Progreso">
+          <span>{{ dayLabel }}</span>
+          <div class="bar"><div style="height: 100%; width: {{ pct }}; background: #0B6A88"></div></div>
+        </div>
+        <span class="badge" role="status" style="background: {{ badgeBg }}; color: {{ badgeFg }}">
+          <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"></circle></svg>{{ stateLabel }}
+        </span>
+      </div>
+
+      <section class="card" aria-labelledby="ch-h">
+        <div class="chead"><h2 id="ch-h">La cadena</h2><span class="hint">SVG + requestAnimationFrame · las cajas se mueven hacia el cliente, los pedidos hacia la fábrica</span></div>
+        <svg viewBox="0 0 1000 150" style="width: 100%; height: auto; display: block" role="img" aria-label="Cadena de cinco nodos: Cliente, Minorista, Mayorista, Distribuidor y Fábrica. El producto fluye hacia el cliente y los pedidos fluyen hacia la fábrica con 2 semanas de retraso por eslabón.">
+          <g font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">
+            <rect x="10" y="40" width="140" height="64" rx="12" fill="#EEF2F7" stroke="#8A94A8"></rect><text x="80" y="70" fill="#14213D">Cliente</text><text x="80" y="90" font-size="12" font-weight="500" fill="#5A6478">μ 100 · σ 10</text>
+            <rect x="222" y="40" width="140" height="64" rx="12" fill="#E8F3F7" stroke="#9CC9DA" stroke-width="2"></rect><text x="292" y="70" fill="#14213D">Minorista</text><text x="292" y="90" font-size="12" font-weight="500" fill="#5A6478">×2.2</text>
+            <rect x="434" y="40" width="140" height="64" rx="12" fill="#E0EFF5" stroke="#4FA3C0" stroke-width="2"></rect><text x="504" y="70" fill="#14213D">Mayorista</text><text x="504" y="90" font-size="12" font-weight="500" fill="#5A6478">×5.1</text>
+            <rect x="646" y="40" width="140" height="64" rx="12" fill="#D3E7EE" stroke="#0B6A88" stroke-width="2"></rect><text x="716" y="70" fill="#14213D">Distribuidor</text><text x="716" y="90" font-size="12" font-weight="500" fill="#5A6478">×11.8</text>
+            <rect x="858" y="40" width="132" height="64" rx="12" fill="#14213D"></rect><text x="924" y="70" fill="#FFFFFF">Fábrica</text><text x="924" y="90" font-size="12" font-weight="500" fill="#CFE3F0">×26.4</text>
+          </g>
+          <g stroke="#0B6A88" stroke-width="2" fill="none">
+            <path d="M362 58 H434"></path><path d="M574 58 H646"></path><path d="M786 58 H858"></path><path d="M150 58 H222"></path>
+          </g>
+          <g fill="#0B6A88"><path d="M222 58 l-8 -5 v10 z"></path><path d="M434 58 l-8 -5 v10 z"></path><path d="M646 58 l-8 -5 v10 z"></path><path d="M858 58 l-8 -5 v10 z"></path></g>
+          <g stroke="#C2410C" stroke-width="2" fill="none" stroke-dasharray="5 4">
+            <path d="M222 88 H150"></path><path d="M434 88 H362"></path><path d="M646 88 H574"></path><path d="M858 88 H786"></path>
+          </g>
+          <g fill="#C2410C"><path d="M150 88 l8 -5 v10 z"></path><path d="M362 88 l8 -5 v10 z"></path><path d="M574 88 l8 -5 v10 z"></path><path d="M786 88 l8 -5 v10 z"></path></g>
+          <g fill="#C2410C"><rect x="396" y="81" width="12" height="12" rx="2"></rect><rect x="606" y="81" width="12" height="12" rx="2"></rect><rect x="814" y="81" width="12" height="12" rx="2"></rect></g>
+          <g fill="#0B6A88"><circle cx="400" cy="58" r="5"></circle><circle cx="612" cy="58" r="5"></circle><circle cx="186" cy="58" r="5"></circle></g>
+          <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+            <text x="10" y="135">Flujo superior: pedidos (información) → · Flujo inferior: producto ← · retraso L = 2 semanas por eslabón</text>
+          </g>
+        </svg>
+      </section>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Parámetros</h2>
+          <div class="field">
+            <div class="frow"><label for="mu">Demanda media del cliente (μ)</label><output for="mu">100 u/sem</output></div>
+            <input id="mu" type="range" min="10" max="500" step="10" value="100" aria-describedby="mu-h">
+            <p class="hint" id="mu-h">10–500 unidades por semana</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="sd">Variabilidad del cliente (σ)</label><output for="sd">10 u</output></div>
+            <input id="sd" type="range" min="0" max="100" step="1" value="10" aria-describedby="sd-h">
+            <p class="hint" id="sd-h">0–100 unidades · normal con semilla</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="L">Tiempo de entrega por eslabón (L)</label><output for="L">2 sem</output></div>
+            <input id="L" type="range" min="1" max="6" step="1" value="2" aria-describedby="L-h">
+            <p class="hint" id="L-h">1–6 semanas</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="p">Ventana de pronóstico (p)</label><output for="p">4 sem</output></div>
+            <input id="p" type="range" min="1" max="12" step="1" value="4" aria-describedby="p-h">
+            <p class="hint" id="p-h">1–12 semanas · promedio móvil de pedidos recibidos</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="sem">Horizonte</label><output for="sem">52 sem</output></div>
+            <input id="sem" type="range" min="20" max="104" step="1" value="52" aria-describedby="sem-h">
+            <p class="hint" id="sem-h">20–104 semanas</p>
+          </div>
+          <label class="check"><input type="checkbox"> Compartir demanda del cliente con toda la cadena</label>
+          <p class="hint" style="margin-top: -10px">Cada eslabón pronostica con la demanda final en vez de con los pedidos que recibe.</p>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi"><dt>Var. pedidos minorista</dt><dd>×2.2</dd></div>
+            <div class="kpi"><dt>Var. pedidos mayorista</dt><dd>×5.1</dd></div>
+            <div class="kpi"><dt>Var. pedidos distribuidor</dt><dd>×11.8</dd></div>
+            <div class="kpi hl"><dt>Amplificación en fábrica</dt><dd>×26.4 <small>vs. demanda del cliente</small></dd></div>
+          </dl>
+
+          <section class="card chart" aria-labelledby="g-h">
+            <div class="chead"><h2 id="g-h">Pedidos por eslabón</h2><span class="hint">Chart.js · line, 5 series</span></div>
+            <svg viewBox="0 0 720 330" role="img" aria-label="Pedidos semanales durante 52 semanas. La demanda del cliente oscila entre 91 y 112. Los pedidos del minorista entre 84 y 120, del mayorista entre 72 y 135, del distribuidor entre 55 y 155, y de la fábrica entre 25 y 190.">
+              <g stroke="#E6EBF2" stroke-width="1">
+                <line x1="60" y1="30" x2="700" y2="30"></line><line x1="60" y1="82" x2="700" y2="82"></line><line x1="60" y1="134" x2="700" y2="134"></line><line x1="60" y1="186" x2="700" y2="186"></line><line x1="60" y1="238" x2="700" y2="238"></line>
+              </g>
+              <line x1="60" y1="290" x2="700" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="290" stroke="#5A6478"></line>
+              <polyline points="60,186 109.2,118.4 158.5,243.2 207.7,134 256.9,238 306.2,92.4 355.4,264 404.6,113.2 453.8,206.8 503.1,243.2 552.3,97.6 601.5,227.6 650.8,144.4 700,186" fill="none" stroke="#14213D" stroke-width="2.5"></polyline>
+              <polyline points="60,186 109.2,144.4 158.5,219.3 207.7,161 256.9,213 306.2,128.8 355.4,232.8 404.6,146.5 453.8,196.4 503.1,217.2 552.3,131.9 601.5,204.7 650.8,165.2 700,186" fill="none" stroke="#0B6A88" stroke-width="2.5"></polyline>
+              <polyline points="60,186 109.2,160 158.5,206.8 207.7,173.5 256.9,201.6 306.2,149.6 355.4,215.1 404.6,165.2 453.8,191.2 503.1,203.7 552.3,152.7 601.5,196.4 650.8,175.6 700,186" fill="none" stroke="#4FA3C0" stroke-width="2.5"></polyline>
+              <polyline points="60,186 109.2,170.4 158.5,198.5 207.7,179.8 256.9,193.3 306.2,165.2 355.4,202.6 404.6,175.6 453.8,189.1 503.1,195.4 552.3,167.3 601.5,190.2 650.8,181.8 700,186" fill="none" stroke="#9CC9DA" stroke-width="2.5"></polyline>
+              <polyline points="60,186 109.2,177.7 158.5,192.2 207.7,182.9 256.9,189.1 306.2,173.5 355.4,195.4 404.6,180.8 453.8,187 503.1,191.2 552.3,175.6 601.5,188.1 650.8,183.9 700,186" fill="none" stroke="#8A94A8" stroke-width="2" stroke-dasharray="4 4"></polyline>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="294" text-anchor="end">0</text><text x="52" y="242" text-anchor="end">50</text><text x="52" y="190" text-anchor="end">100</text><text x="52" y="138" text-anchor="end">150</text><text x="52" y="86" text-anchor="end">200</text><text x="52" y="34" text-anchor="end">250</text>
+                <text x="60" y="310" text-anchor="middle">0</text><text x="207.7" y="310" text-anchor="middle">12</text><text x="355.4" y="310" text-anchor="middle">24</text><text x="503.1" y="310" text-anchor="middle">36</text><text x="650.8" y="310" text-anchor="middle">48</text>
+                <text x="380" y="328" text-anchor="middle">Semana</text>
+                <text x="14" y="20">Unidades pedidas</text>
+              </g>
+            </svg>
+            <ul class="legend">
+              <li><span class="sw" style="background: #8A94A8"></span>Cliente</li>
+              <li><span class="sw" style="background: #9CC9DA"></span>Minorista</li>
+              <li><span class="sw" style="background: #4FA3C0"></span>Mayorista</li>
+              <li><span class="sw" style="background: #0B6A88"></span>Distribuidor</li>
+              <li><span class="sw" style="background: #14213D"></span>Fábrica</li>
+            </ul>
+          </section>
+
+          <section class="card chart" aria-labelledby="g2-h">
+            <div class="chead"><h2 id="g2-h">Varianza de pedidos / varianza de la demanda</h2><span class="hint">Chart.js · bar horizontal</span></div>
+            <svg viewBox="0 0 720 200" role="img" aria-label="Razón de varianzas: minorista 2.2, mayorista 5.1, distribuidor 11.8, fábrica 26.4. La línea punteada en 1 representa ausencia de amplificación.">
+              <g font-family="Inter, sans-serif" font-size="13" fill="#14213D" font-weight="600">
+                <text x="120" y="34" text-anchor="end">Minorista</text><text x="120" y="78" text-anchor="end">Mayorista</text><text x="120" y="122" text-anchor="end">Distribuidor</text><text x="120" y="166" text-anchor="end">Fábrica</text>
+              </g>
+              <rect x="132" y="16" width="41" height="26" rx="4" fill="#9CC9DA"></rect>
+              <rect x="132" y="60" width="95.2" height="26" rx="4" fill="#4FA3C0"></rect>
+              <rect x="132" y="104" width="220.3" height="26" rx="4" fill="#0B6A88"></rect>
+              <rect x="132" y="148" width="492.8" height="26" rx="4" fill="#14213D"></rect>
+              <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="600" fill="#14213D">
+                <text x="181" y="34">2.2</text><text x="235" y="78">5.1</text><text x="360" y="122">11.8</text><text x="633" y="166">26.4</text>
+              </g>
+              <line x1="150.7" y1="8" x2="150.7" y2="182" stroke="#C2410C" stroke-dasharray="3 3"></line>
+              <text x="156" y="196" font-family="Inter, sans-serif" font-size="12" fill="#8A3B0A">1 = sin amplificación</text>
+            </svg>
+            <details>
+              <summary>Ver datos como tabla</summary>
+              <div class="tbl">
+                <table>
+                  <thead><tr><th scope="col">Eslabón</th><th scope="col">Media pedidos</th><th scope="col">Desv. estándar</th><th scope="col">Var / Var cliente</th><th scope="col">Cota teórica</th></tr></thead>
+                  <tbody>
+                    <tr><td>Cliente</td><td>100.6</td><td>9.8</td><td>1.0</td><td>—</td></tr>
+                    <tr><td>Minorista</td><td>100.8</td><td>14.5</td><td>2.2</td><td>2.5</td></tr>
+                    <tr><td>Mayorista</td><td>101.1</td><td>22.1</td><td>5.1</td><td>6.3</td></tr>
+                    <tr><td>Distribuidor</td><td>101.5</td><td>33.7</td><td>11.8</td><td>15.6</td></tr>
+                    <tr><td>Fábrica</td><td>102.0</td><td>50.4</td><td>26.4</td><td>39.1</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+            <div class="math">
+              <span><i>BW</i> = Var(<i>q</i>) ⁄ Var(<i>D</i>)</span>
+              <span>Var(<i>q</i>) ⁄ Var(<i>D</i>) ≥ 1 + 2<i>L</i>⁄<i>p</i> + 2<i>L</i>²⁄<i>p</i>²</span>
+              <span><i>q</i><sub><i>t</i></sub> = <i>S</i><sub><i>t</i></sub> − <i>S</i><sub><i>t</i>−1</sub> + <i>D</i><sub><i>t</i>−1</sub></span>
+            </div>
+            <p class="note">Cota de Chen et al. (2000) para un eslabón con promedio móvil de p periodos y política de nivel objetivo S<sub>t</sub> = L·D̂<sub>t</sub> + zσ̂√L. Sin información compartida la cota se multiplica eslabón a eslabón.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>Cómo la variabilidad crece al subir por la cadena aunque el consumidor final sea estable, por pronósticos locales, retrasos y ajustes del inventario de seguridad.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>μ, σ</dt><dd>Demanda real del consumidor final.</dd></div>
+            <div><dt>L</dt><dd>Retraso de entrega entre eslabones.</dd></div>
+            <div><dt>p</dt><dd>Semanas usadas para pronosticar: más semanas, pronóstico más suave.</dd></div>
+            <div><dt>Información compartida</dt><dd>Todos ven la demanda real del cliente.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Más L o menos p elevan la amplificación.</li>
+            <li>Compartir información la reduce de forma notable.</li>
+            <li>La fábrica sufre los picos: horas extra, capacidad ociosa, inventario.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>Justifica compartir datos de punto de venta con proveedores (VMI, CPFR), reducir tiempos de entrega, evitar promociones que generan picos y sincronizar el plan de producción con la demanda real.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["corriendo","pausa","reiniciada"],"default":"pausa"},"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const e = this.props.estado ?? 'pausa';
+    const map = {
+      corriendo: { stateLabel: 'Corriendo', badgeBg: '#DCEEF4', badgeFg: '#084E64', playLabel: 'Pausar', dayLabel: 'Semana 36 de 52', pct: '69%' },
+      pausa: { stateLabel: 'En pausa', badgeBg: '#FDF1E4', badgeFg: '#8A3B0A', playLabel: 'Reanudar', dayLabel: 'Semana 52 de 52', pct: '100%' },
+      reiniciada: { stateLabel: 'Reiniciada', badgeBg: '#EEF2F7', badgeFg: '#3D475C', playLabel: 'Iniciar', dayLabel: 'Semana 0 de 52', pct: '0%' }
+    };
+    const v = map[e] || map.pausa;
+    return Object.assign({ running: e === 'corriendo', notRunning: e !== 'corriendo' }, v);
+  }
+}
+</script>
+</body>
+</html>

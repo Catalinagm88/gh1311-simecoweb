@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Inicio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.primary:hover{background:#084E64;color:#FFFFFF}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:28px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,4vw,52px);line-height:1.05;margin:6px 0 12px;letter-spacing:-.01em}
+.lede{max-width:760px;margin:0;color:#3D475C;font-size:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.simcard{display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;text-decoration:none;color:#14213D;min-height:200px;box-sizing:border-box}
+.simcard:hover{border-color:#0B6A88;color:#14213D}
+.simcard h3{font-family:'Space Grotesk',sans-serif;font-size:19px;margin:0;line-height:1.2}
+.simcard p{margin:0;font-size:14px;color:#3D475C;flex:1 1 auto}
+.ic{width:40px;height:40px;border-radius:10px;background:#DCEEF4;color:#0B6A88;display:flex;align-items:center;justify-content:center}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#5A6478}
+.meta code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#084E64}
+.tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8A3B0A;background:#FDEBDD;border-radius:999px;padding:2px 8px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.step{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px}
+.step h3{font-family:'Space Grotesk',sans-serif;font-size:17px;margin:0 0 6px}
+.step p{margin:0;font-size:14px;color:#3D475C}
+.step code{font-family:'JetBrains Mono',monospace;font-size:13px;background:#EEF2F7;padding:1px 6px;border-radius:4px}
+h2.sec{font-family:'Space Grotesk',sans-serif;font-size:24px;margin:0}
+.foot{font-size:13px;color:#5A6478;border-top:1px solid #DDE2EA;padding-top:16px}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <label class="seed" for="seed">Semilla <input id="seed" type="number" value="42" inputmode="numeric"></label>
+      <button class="btn dark" type="button">Escenarios guardados</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html" aria-current="page"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">Laboratorio de simulación económica</p>
+        <h1>Mueve un parámetro.<br>Mira cómo reacciona el negocio.</h1>
+        <p class="lede">Ocho simulaciones interactivas sobre mercados, finanzas, inventarios, cadena de suministro y flujos de servicio. Cada una explica qué modela, qué significa cada parámetro, qué efecto tiene al cambiarlo y para qué sirve en una empresa.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px">
+          <a class="btn primary" href="EOQ.dc.html">Empezar con EOQ</a>
+          <a class="btn" href="BeerGame.dc.html">Jugar el Beer Game</a>
+        </div>
+      </section>
+
+      <section style="display: flex; flex-direction: column; gap: 14px" aria-labelledby="sims-h">
+        <h2 class="sec" id="sims-h">Simulaciones</h2>
+        <div class="cards">
+          <a class="simcard" href="OfertaDemanda.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 4 L21 20"></path><path d="M3 20 L21 4"></path></svg></span>
+            <h3>Oferta y demanda</h3>
+            <p>Equilibrio de mercado, desplazamientos de curvas, impuestos y precios máximos.</p>
+            <span class="meta"><code>#/oferta-demanda</code><span>Mercados</span></span>
+          </a>
+          <a class="simcard" href="Interes.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 20 C10 19 15 14 21 4"></path><path d="M3 20 H21"></path></svg></span>
+            <h3>Interés compuesto y decisiones financieras</h3>
+            <p>Simple vs. compuesto vs. continuo, aportaciones periódicas y comparación de opciones.</p>
+            <span class="meta"><code>#/interes</code><span>Finanzas</span></span>
+          </a>
+          <a class="simcard" href="EOQ.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6 C8 18 16 18 21 6"></path><circle cx="12" cy="15" r="2"></circle></svg></span>
+            <h3>Cantidad económica de pedido</h3>
+            <p>El tamaño de lote que minimiza el costo total de ordenar y mantener inventario.</p>
+            <span class="meta"><code>#/eoq</code><span>Inventarios</span></span>
+          </a>
+          <a class="simcard" href="PuntoReorden.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5 L9 15 V5 L15 15 V5 L21 15"></path><path d="M3 12 H21" stroke-dasharray="2 3"></path></svg></span>
+            <h3>Punto de reorden con demanda variable</h3>
+            <p>Inventario de seguridad, nivel de servicio y riesgo de faltante con demanda aleatoria.</p>
+            <span class="meta"><code>#/punto-reorden</code><span class="tag">Dinámica</span></span>
+          </a>
+          <a class="simcard" href="Revision.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 7 V12 L15 14"></path></svg></span>
+            <h3>Sistemas de revisión</h3>
+            <p>Política (s, Q) continua contra (R, S) periódica con la misma demanda y semilla.</p>
+            <span class="meta"><code>#/revision</code><span class="tag">Dinámica</span></span>
+          </a>
+          <a class="simcard" href="Bullwhip.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 12 C5 11 6 13 8 12 C10 9 12 15 14 12 C16 6 19 18 22 12"></path></svg></span>
+            <h3>Efecto látigo</h3>
+            <p>Cómo pequeñas variaciones en la demanda se amplifican al subir por la cadena.</p>
+            <span class="meta"><code>#/bullwhip</code><span class="tag">Dinámica</span></span>
+          </a>
+          <a class="simcard" href="BeerGame.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="9" width="4" height="6" rx="1"></rect><rect x="10" y="9" width="4" height="6" rx="1"></rect><rect x="18" y="9" width="4" height="6" rx="1"></rect><path d="M6 12 H10 M14 12 H18"></path></svg></span>
+            <h3>Beer Game (simplificado)</h3>
+            <p>Juega un eslabón de la cadena semana a semana y compara tus costos con la política automática.</p>
+            <span class="meta"><code>#/beer-game</code><span class="tag">Juego</span></span>
+          </a>
+          <a class="simcard" href="Colas.dc.html">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="4" cy="12" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="14" cy="12" r="2"></circle><rect x="18" y="8" width="4" height="8" rx="1"></rect></svg></span>
+            <h3>Teoría de colas y cuellos de botella</h3>
+            <p>M/M/1, M/M/c y líneas en serie: utilización, espera y la estación que limita el flujo.</p>
+            <span class="meta"><code>#/colas</code><span class="tag">Dinámica</span></span>
+          </a>
+        </div>
+      </section>
+
+      <section style="display: flex; flex-direction: column; gap: 14px" aria-labelledby="how-h">
+        <h2 class="sec" id="how-h">Cómo funciona</h2>
+        <div class="how">
+          <div class="step">
+            <h3>1 · Ajusta los parámetros</h3>
+            <p>Cada control indica su rango, unidad y valor por defecto. Las gráficas y los indicadores se recalculan al instante.</p>
+          </div>
+          <div class="step">
+            <h3>2 · Usa una semilla</h3>
+            <p>Las simulaciones aleatorias usan la semilla del encabezado (por defecto <code>42</code>): el mismo escenario siempre da el mismo resultado en clase.</p>
+          </div>
+          <div class="step">
+            <h3>3 · Guarda y comparte</h3>
+            <p>Guarda escenarios en este navegador o copia un enlace como <code>#/eoq?D=1200&amp;S=50&amp;H=2</code> para abrirlo con los mismos valores.</p>
+          </div>
+        </div>
+      </section>
+
+      <p class="foot">SimEco · Herramienta educativa gratuita. Los resultados son modelos simplificados con fines de aprendizaje.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

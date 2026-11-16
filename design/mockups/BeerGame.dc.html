@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Beer Game</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.accent{background:#C2410C;border-color:#C2410C;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0;border:0;padding:0;margin:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label,.field legend{font-weight:600;font-size:14px;padding:0}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.field select{min-height:44px;border-radius:10px;border:1px solid #CBD3DF;padding:0 10px;font:600 14px Inter,sans-serif;background:#FFFFFF;color:#14213D;margin-top:4px}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.seg label{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #CBD3DF;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;background:#FFFFFF}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg .on{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.runbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:10px 12px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px}
+.prog{flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#5A6478;font-family:'JetBrains Mono',monospace}
+.bar{height:6px;background:#E6EBF2;border-radius:3px;overflow:hidden}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.node{border:1px solid #DDE2EA;border-radius:12px;padding:14px;background:#FFFFFF;display:flex;flex-direction:column;gap:8px}
+.node.me{border:2px solid #C2410C;background:#FFF8F2}
+.node h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0;display:flex;justify-content:space-between;align-items:center}
+.you{font:700 11px Inter,sans-serif;color:#FFFFFF;background:#C2410C;border-radius:999px;padding:2px 8px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;margin:0;font-size:12px}
+.stats dt{color:#5A6478;font-weight:600}
+.stats dd{margin:0;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:#14213D}
+.pipe{display:flex;gap:4px;align-items:center;font-size:11px;color:#5A6478}
+.slot{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#DCEEF4;color:#084E64;border-radius:6px;padding:2px 8px}
+.order{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.stepper{display:flex;align-items:center;border:1px solid #CBD3DF;border-radius:10px;overflow:hidden;background:#FFFFFF}
+.stepper button{width:44px;height:52px;border:0;background:#EEF2F7;font:700 20px Inter,sans-serif;color:#14213D;cursor:pointer}
+.stepper input{width:80px;height:52px;border:0;text-align:center;font:600 24px 'JetBrains Mono',monospace;color:#14213D}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0}
+.kpi{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:#5A6478;font-weight:600}
+.kpi dd{margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#14213D;line-height:1.2}
+.kpi small{display:block;font-size:12px;color:#5A6478;font-family:Inter,sans-serif;font-weight:500}
+.chead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;font-weight:600;color:#0B6A88;min-height:32px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/beer-game?rol=minorista&amp;modo=jugar&amp;sem=30&amp;h=0.5&amp;b=1&amp;L=2&amp;seed=42</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <label class="seed" for="seed">Semilla <input id="seed" type="number" value="42" inputmode="numeric"></label>
+      <button class="btn dark sm" type="button">Guardar partida</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html" aria-current="page"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">07 · Cadena de suministro · juego</p>
+        <h1>Beer Game (versión simplificada)</h1>
+        <p class="lede">Juegas un eslabón de una cadena de cuatro. Cada semana recibes un pedido, envías lo que puedes y decides cuánto pedir sin ver la demanda final. Los otros tres eslabones siguen una política automática.</p>
+      </section>
+
+      <div class="runbar" role="group" aria-label="Control del juego">
+        <button class="btn primary" type="button">
+          <sc-if value="{{ running }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect></svg></sc-if>
+          <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg></sc-if>
+          {{ playLabel }}
+        </button>
+        <button class="btn" type="button">Reiniciar partida</button>
+        <div class="prog" aria-label="Progreso">
+          <span>{{ dayLabel }}</span>
+          <div class="bar"><div style="height: 100%; width: {{ pct }}; background: #0B6A88"></div></div>
+        </div>
+        <span class="badge" role="status" style="background: {{ badgeBg }}; color: {{ badgeFg }}">
+          <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"></circle></svg>{{ stateLabel }}
+        </span>
+      </div>
+
+      <section class="card" aria-labelledby="b-h" style="display: flex; flex-direction: column; gap: 16px">
+        <div class="chead"><h2 id="b-h">Tablero · semana 12</h2><span class="hint">SVG animado: camiones hacia el cliente, sobres de pedido hacia la fábrica</span></div>
+        <svg viewBox="0 0 1000 70" style="width: 100%; height: auto; display: block" aria-hidden="true">
+          <line x1="40" y1="24" x2="960" y2="24" stroke="#0B6A88" stroke-width="2"></line>
+          <line x1="40" y1="50" x2="960" y2="50" stroke="#C2410C" stroke-width="2" stroke-dasharray="5 4"></line>
+          <g fill="#0B6A88"><path d="M40 24 l10 -6 v12 z"></path><rect x="300" y="15" width="24" height="16" rx="3"></rect><rect x="560" y="15" width="24" height="16" rx="3"></rect><rect x="790" y="15" width="24" height="16" rx="3"></rect></g>
+          <g fill="#C2410C"><path d="M960 50 l-10 -6 v12 z"></path><rect x="200" y="43" width="18" height="14" rx="2"></rect><rect x="450" y="43" width="18" height="14" rx="2"></rect><rect x="700" y="43" width="18" height="14" rx="2"></rect></g>
+          <text x="40" y="68" font-family="Inter, sans-serif" font-size="12" fill="#5A6478">← producto · pedidos →</text>
+        </svg>
+        <div class="board">
+          <div class="node me">
+            <h3>Minorista <span class="you">Tú</span></h3>
+            <dl class="stats">
+              <div><dt>Inventario</dt><dd>0</dd></div>
+              <div><dt>Pendientes</dt><dd style="color: #8A3B0A">10</dd></div>
+              <div><dt>Pedido recibido</dt><dd>8</dd></div>
+              <div><dt>Costo acum.</dt><dd>$41.5</dd></div>
+            </dl>
+            <div class="pipe">En tránsito <span class="slot">6</span><span class="slot">9</span></div>
+          </div>
+          <div class="node">
+            <h3>Mayorista</h3>
+            <dl class="stats">
+              <div><dt>Inventario</dt><dd>0</dd></div>
+              <div><dt>Pendientes</dt><dd style="color: #8A3B0A">16</dd></div>
+              <div><dt>Pedido recibido</dt><dd>12</dd></div>
+              <div><dt>Costo acum.</dt><dd>$58.0</dd></div>
+            </dl>
+            <div class="pipe">En tránsito <span class="slot">10</span><span class="slot">14</span></div>
+          </div>
+          <div class="node">
+            <h3>Distribuidor</h3>
+            <dl class="stats">
+              <div><dt>Inventario</dt><dd>0</dd></div>
+              <div><dt>Pendientes</dt><dd style="color: #8A3B0A">20</dd></div>
+              <div><dt>Pedido recibido</dt><dd>15</dd></div>
+              <div><dt>Costo acum.</dt><dd>$66.5</dd></div>
+            </dl>
+            <div class="pipe">En tránsito <span class="slot">14</span><span class="slot">20</span></div>
+          </div>
+          <div class="node">
+            <h3>Fábrica</h3>
+            <dl class="stats">
+              <div><dt>Inventario</dt><dd>0</dd></div>
+              <div><dt>Pendientes</dt><dd style="color: #8A3B0A">18</dd></div>
+              <div><dt>Pedido recibido</dt><dd>19</dd></div>
+              <div><dt>Costo acum.</dt><dd>$61.0</dd></div>
+            </dl>
+            <div class="pipe">En producción <span class="slot">20</span><span class="slot">26</span></div>
+          </div>
+        </div>
+        <form class="order" aria-labelledby="o-h" style="border-top: 1px solid #E6EBF2; padding-top: 16px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label id="o-h" for="qty" style="font-weight: 700">Tu pedido al mayorista esta semana</label>
+            <div class="stepper">
+              <button type="button" aria-label="Restar 1">−</button>
+              <input id="qty" type="number" min="0" max="99" value="12" inputmode="numeric">
+              <button type="button" aria-label="Sumar 1">+</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <button class="btn sm" type="button">Igual al pedido recibido (8)</button>
+            <button class="btn sm" type="button">Sugerencia de la política (11)</button>
+          </div>
+          <button class="btn accent" type="submit" style="margin-left: auto">Enviar pedido y avanzar semana</button>
+        </form>
+      </section>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Configuración de la partida</h2>
+          <fieldset class="field">
+            <legend>Modo</legend>
+            <div class="seg">
+              <label class="on"><input type="radio" name="modo" checked>Jugar un rol</label>
+              <label><input type="radio" name="modo">Todo automático</label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="rol">Tu rol</label>
+            <select id="rol"><option selected>Minorista</option><option>Mayorista</option><option>Distribuidor</option><option>Fábrica</option></select>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="sem">Duración</label><output for="sem">30 semanas</output></div>
+            <input id="sem" type="range" min="20" max="52" step="1" value="30" aria-describedby="sem-h">
+            <p class="hint" id="sem-h">20–52 semanas</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="L">Retraso de envío y pedido (L)</label><output for="L">2 sem</output></div>
+            <input id="L" type="range" min="1" max="4" step="1" value="2" aria-describedby="L-h">
+            <p class="hint" id="L-h">1–4 semanas por eslabón</p>
+          </div>
+          <p class="group">Demanda del cliente</p>
+          <div class="field">
+            <div class="frow"><label for="d0">Demanda inicial → después del salto</label><output for="d0">4 → 8 u</output></div>
+            <input id="d0" type="range" min="0" max="20" step="1" value="8" aria-describedby="d0-h">
+            <p class="hint" id="d0-h">Salto en la semana 5; ruido Poisson opcional con la semilla</p>
+          </div>
+          <p class="group">Costos por semana</p>
+          <div class="field">
+            <div class="frow"><label for="h">Mantener inventario (h)</label><output for="h">$0.50 / u</output></div>
+            <input id="h" type="range" min="0" max="5" step="0.1" value="0.5" aria-describedby="h-h">
+            <p class="hint" id="h-h">$0–$5 por unidad por semana</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="b">Pedido pendiente (b)</label><output for="b">$1.00 / u</output></div>
+            <input id="b" type="range" min="0" max="10" step="0.1" value="1" aria-describedby="b-h">
+            <p class="hint" id="b-h">$0–$10 por unidad no surtida por semana</p>
+          </div>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi"><dt>Tu costo total</dt><dd>$186.5</dd></div>
+            <div class="kpi"><dt>Política automática</dt><dd>$142.0 <small>mismo rol y semilla</small></dd></div>
+            <div class="kpi"><dt>Costo de la cadena</dt><dd>$1,284</dd></div>
+            <div class="kpi"><dt>Amplificación fábrica</dt><dd>×9.7 <small>Var(pedidos) / Var(demanda)</small></dd></div>
+          </dl>
+
+          <section class="card chart" aria-labelledby="g-h">
+            <div class="chead"><h2 id="g-h">Inventario neto por eslabón</h2><span class="hint">Chart.js · line · negativo = pedidos pendientes</span></div>
+            <svg viewBox="0 0 720 330" role="img" aria-label="Inventario neto durante 30 semanas. Tras el salto de demanda en la semana 5, todos los eslabones caen a valores negativos, más profundo cuanto más lejos del cliente: la fábrica llega a menos 30 en la semana 15 y luego acumula más 36 en la semana 27.">
+              <rect x="60" y="160" width="640" height="130" fill="#C2410C" fill-opacity="0.05"></rect>
+              <g stroke="#E6EBF2" stroke-width="1">
+                <line x1="60" y1="30" x2="700" y2="30"></line><line x1="60" y1="95" x2="700" y2="95"></line><line x1="60" y1="225" x2="700" y2="225"></line>
+              </g>
+              <line x1="60" y1="160" x2="700" y2="160" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="290" stroke="#5A6478"></line>
+              <line x1="166.7" y1="30" x2="166.7" y2="290" stroke="#8A94A8" stroke-dasharray="3 4"></line>
+              <text x="172" y="44" font-family="Inter, sans-serif" font-size="12" fill="#3D475C">Salto 4 → 8</text>
+              <polyline points="60,121 124,121 188,127.5 252,166.5 316,218.5 380,257.5 444,225 508,134 572,49.5 636,43 700,75.5" fill="none" stroke="#14213D" stroke-width="2.5"></polyline>
+              <polyline points="60,121 124,121 188,134 252,179.5 316,225 380,231.5 444,179.5 508,108 572,69 636,82 700,108" fill="none" stroke="#0B6A88" stroke-width="2.5"></polyline>
+              <polyline points="60,121 124,124.3 188,140.5 252,186 316,212 380,199 444,147 508,101.5 572,95 636,114.5 700,127.5" fill="none" stroke="#4FA3C0" stroke-width="2.5"></polyline>
+              <polyline points="60,121 124,127.5 188,147 252,179.5 316,192.5 380,173 444,140.5 508,121 572,127.5 636,134 700,140.5" fill="none" stroke="#C2410C" stroke-width="3.5"></polyline>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="34" text-anchor="end">+40</text><text x="52" y="99" text-anchor="end">+20</text><text x="52" y="164" text-anchor="end">0</text><text x="52" y="229" text-anchor="end">−20</text><text x="52" y="294" text-anchor="end">−40</text>
+                <text x="60" y="310" text-anchor="middle">0</text><text x="188" y="310" text-anchor="middle">6</text><text x="316" y="310" text-anchor="middle">12</text><text x="444" y="310" text-anchor="middle">18</text><text x="572" y="310" text-anchor="middle">24</text><text x="700" y="310" text-anchor="middle">30</text>
+                <text x="380" y="328" text-anchor="middle">Semana</text>
+                <text x="14" y="20">Inventario neto (u)</text>
+              </g>
+            </svg>
+            <ul class="legend">
+              <li><span class="sw" style="background: #C2410C"></span>Minorista (tú)</li>
+              <li><span class="sw" style="background: #4FA3C0"></span>Mayorista</li>
+              <li><span class="sw" style="background: #0B6A88"></span>Distribuidor</li>
+              <li><span class="sw" style="background: #14213D"></span>Fábrica</li>
+            </ul>
+            <details>
+              <summary>Ver datos como tabla</summary>
+              <div class="tbl">
+                <table>
+                  <thead><tr><th scope="col">Semana</th><th scope="col">Minorista</th><th scope="col">Mayorista</th><th scope="col">Distribuidor</th><th scope="col">Fábrica</th></tr></thead>
+                  <tbody>
+                    <tr><td>6</td><td>4</td><td>6</td><td>8</td><td>10</td></tr>
+                    <tr><td>12</td><td>−10</td><td>−16</td><td>−20</td><td>−18</td></tr>
+                    <tr><td>18</td><td>6</td><td>4</td><td>−6</td><td>−20</td></tr>
+                    <tr><td>24</td><td>10</td><td>20</td><td>28</td><td>34</td></tr>
+                    <tr><td>30</td><td>6</td><td>10</td><td>16</td><td>26</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Reglas del modelo</h2>
+            <div class="math">
+              <span><i>I</i><sub><i>t</i></sub> = <i>I</i><sub><i>t</i>−1</sub> + <i>R</i><sub><i>t</i></sub> − <i>E</i><sub><i>t</i></sub></span>
+              <span><i>C</i> = Σ (<i>h</i>·<i>I</i><sup>+</sup><sub><i>t</i></sub> + <i>b</i>·<i>B</i><sub><i>t</i></sub>)</span>
+              <span><i>q</i><sub><i>t</i></sub> = max(0, <i>D̂</i> + <i>α</i>(<i>S</i>* − <i>IP</i><sub><i>t</i></sub>))</span>
+            </div>
+            <p class="note">Orden semanal: 1) llegan envíos, 2) llega el pedido del cliente, 3) se surte demanda + pendientes, 4) se coloca el pedido. Política automática: pronóstico exponencial D̂ (θ = 0.3), α = 0.4, S* = D̂·(L + 1) + 8.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>La versión clásica del MIT, simplificada a un solo producto, un retraso por eslabón y sin comunicación entre jugadores. Un salto pequeño de demanda desata faltantes y luego excesos.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>Rol y modo</dt><dd>Qué eslabón controlas; en automático observas la política sola.</dd></div>
+            <div><dt>L</dt><dd>Semanas que tarda un pedido en convertirse en envío recibido.</dd></div>
+            <div><dt>h, b</dt><dd>Castigo semanal por exceso y por pedidos sin surtir.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Olvidar lo que ya está en tránsito lleva a pedir de más.</li>
+            <li>Más retraso, oscilaciones más grandes y largas.</li>
+            <li>b &gt; h empuja a sobreinventariar tras el primer faltante.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>Entrenar a equipos de compras y planeación, mostrar el valor de compartir información y de mirar el inventario en tránsito, y discutir incentivos entre empresas de una misma cadena.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["corriendo","pausa","reiniciada"],"default":"corriendo"},"$preview":{"width":1280,"height":2000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const e = this.props.estado ?? 'corriendo';
+    const map = {
+      corriendo: { stateLabel: 'Esperando tu pedido', badgeBg: '#DCEEF4', badgeFg: '#084E64', playLabel: 'Pausar', dayLabel: 'Semana 12 de 30', pct: '40%' },
+      pausa: { stateLabel: 'En pausa', badgeBg: '#FDF1E4', badgeFg: '#8A3B0A', playLabel: 'Reanudar', dayLabel: 'Semana 12 de 30', pct: '40%' },
+      reiniciada: { stateLabel: 'Reiniciada', badgeBg: '#EEF2F7', badgeFg: '#3D475C', playLabel: 'Iniciar partida', dayLabel: 'Semana 0 de 30', pct: '0%' }
+    };
+    const v = map[e] || map.corriendo;
+    return Object.assign({ running: e === 'corriendo', notRunning: e !== 'corriendo' }, v);
+  }
+}
+</script>
+</body>
+</html>

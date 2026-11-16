@@ -1,0 +1,27 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-16T19:30:00Z"},
+  "title": "SimEco Web",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 1500, "title": "Inicio · #/", "expand": "fill", "is_interactive": true},
+    "OfertaDemanda.dc.html": {"x": 1360, "y": 0, "w": 1280, "h": 1900, "title": "1 · Oferta y demanda · #/oferta-demanda", "expand": "fill", "is_interactive": true},
+    "Interes.dc.html": {"x": 2720, "y": 0, "w": 1280, "h": 1900, "title": "2 · Interés compuesto · #/interes", "expand": "fill", "is_interactive": true},
+    "EOQ.dc.html": {"x": 4080, "y": 0, "w": 1280, "h": 1900, "title": "3 · Cantidad económica de pedido · #/eoq", "expand": "fill", "is_interactive": true},
+    "PuntoReorden.dc.html": {"x": 0, "y": 2320, "w": 1280, "h": 1900, "title": "4 · Punto de reorden · #/punto-reorden", "expand": "fill", "is_interactive": true},
+    "Revision.dc.html": {"x": 1360, "y": 2320, "w": 1280, "h": 1900, "title": "5 · Revisión continua vs. periódica · #/revision", "expand": "fill", "is_interactive": true},
+    "Bullwhip.dc.html": {"x": 2720, "y": 2320, "w": 1280, "h": 1900, "title": "6 · Efecto látigo · #/bullwhip", "expand": "fill", "is_interactive": true},
+    "BeerGame.dc.html": {"x": 4080, "y": 2320, "w": 1280, "h": 2000, "title": "7 · Beer Game · #/beer-game", "expand": "fill", "is_interactive": true},
+    "Colas.dc.html": {"x": 0, "y": 4740, "w": 1280, "h": 1900, "title": "8 · Teoría de colas · #/colas", "expand": "fill", "is_interactive": true},
+    "Movil.dc.html": {"x": 1360, "y": 4740, "w": 1320, "h": 1000, "title": "Móvil · estados corriendo / pausa / reiniciada"},
+    "Tokens.dc.html": {"x": 2760, "y": 4740, "w": 1280, "h": 1560, "title": "Tokens, breakpoints y accesibilidad"}
+  },
+  "order": ["Main.dc.html", "OfertaDemanda.dc.html", "Interes.dc.html", "EOQ.dc.html", "PuntoReorden.dc.html", "Revision.dc.html", "Bullwhip.dc.html", "BeerGame.dc.html", "Colas.dc.html", "Movil.dc.html", "Tokens.dc.html"],
+  "notes": {
+    "t1": {"x": 0, "y": -300, "text": "SimEco Web · Mercados y finanzas", "kind": "title1", "maxW": 5360},
+    "t2": {"x": 0, "y": 2020, "text": "Inventarios y cadena de suministro", "kind": "title1", "maxW": 5360},
+    "t3": {"x": 0, "y": 4440, "text": "Colas, móvil y sistema de diseño", "kind": "title1", "maxW": 4040}
+  },
+  "designSystems": []
+}

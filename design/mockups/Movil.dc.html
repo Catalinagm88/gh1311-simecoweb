@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Móvil y estados</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B6A88}a:hover{color:#084E64}
+.phone{width:390px;height:844px;border-radius:36px;overflow:hidden;background:#F4F6F9;border:1px solid #CBD3DF;display:flex;flex-direction:column;position:relative}
+.ph-top{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#14213D;color:#FFFFFF}
+.ph-top .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;flex:1 1 auto}
+.icon-btn{width:44px;height:44px;border-radius:10px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;display:flex;align-items:center;justify-content:center}
+.ph-body{flex:1 1 auto;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font:600 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+.h1{font-family:'Space Grotesk',sans-serif;font-size:24px;line-height:1.15;margin:2px 0 0}
+.kp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+.kp div{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:10px;padding:10px 12px}
+.kp dt{font-size:11px;color:#5A6478;font-weight:600}
+.kp dd{margin:2px 0 0;font:600 20px 'JetBrains Mono',monospace;color:#14213D}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:12px}
+.acc{display:flex;justify-content:space-between;align-items:center;min-height:44px;font-weight:700;font-size:15px;padding:0 4px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid #DDE2EA}
+.tabs span{font-size:13px;font-weight:600;padding:10px 8px;color:#5A6478}
+.tabs .on{color:#084E64;border-bottom:3px solid #0B6A88}
+.ph-run{display:flex;align-items:center;gap:8px;padding:12px 16px 24px;background:#FFFFFF;border-top:1px solid #DDE2EA}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;border-radius:12px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;padding:0 14px}
+.b.p{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF;flex:1 1 auto}
+.badge{display:inline-flex;align-items:center;gap:6px;font:700 12px Inter,sans-serif;padding:5px 10px;border-radius:999px}
+.banner{border-radius:10px;padding:10px 12px;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.cap{font:700 13px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#3D475C;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.desc{font-size:13px;color:#3D475C;margin:12px 0 0;max-width:390px}
+.desc code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#EEF2F7;padding:1px 5px;border-radius:4px}
+.sl{display:flex;flex-direction:column}
+.sl .r{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.sl .r output{font-family:'JetBrains Mono',monospace;color:#084E64}
+.sl input{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+</style>
+</helmet>
+<div style="width: 1320px; height: 1000px; box-sizing: border-box; padding: 40px 15px; background: #E9EDF3; font-family: Inter, system-ui, sans-serif; color: #14213D; display: flex; gap: 60px; justify-content: center">
+
+  <div>
+    <p class="cap"><span class="badge" style="background: #DCEEF4; color: #084E64">● Corriendo</span> estado 1</p>
+    <div class="phone">
+      <header class="ph-top">
+        <button class="icon-btn" type="button" aria-label="Abrir menú de simulaciones"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5 H17 M3 10 H17 M3 15 H17"></path></svg></button>
+        <span class="t">SimEco</span>
+        <button class="icon-btn" type="button" aria-label="Compartir enlace"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="10" r="2"></circle><circle cx="15" cy="5" r="2"></circle><circle cx="15" cy="15" r="2"></circle><path d="M7 9 L13 6 M7 11 L13 14"></path></svg></button>
+      </header>
+      <div class="ph-body">
+        <div><p class="eyebrow">08 · Colas</p><h2 class="h1">Teoría de colas</h2></div>
+        <div class="card" style="padding: 8px">
+          <svg viewBox="0 0 340 90" style="width: 100%; display: block" aria-hidden="true">
+            <rect x="10" y="25" width="190" height="40" rx="20" fill="#F4F6F9" stroke="#DDE2EA"></rect>
+            <circle cx="180" cy="45" r="12" fill="#0B6A88"></circle><circle cx="150" cy="45" r="12" fill="#0B6A88"></circle><circle cx="120" cy="45" r="12" fill="#0B6A88"></circle><circle cx="90" cy="45" r="12" fill="#0B6A88"></circle>
+            <rect x="220" y="15" width="110" height="60" rx="12" fill="#14213D"></rect><circle cx="250" cy="45" r="12" fill="#C2410C"></circle>
+            <text x="270" y="50" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">μ = 5/h</text>
+          </svg>
+        </div>
+        <dl class="kp" aria-live="polite">
+          <div><dt>Utilización ρ</dt><dd>0.80</dd></div>
+          <div><dt>En sistema L</dt><dd>4.00</dd></div>
+          <div><dt>Espera W<sub>q</sub></dt><dd>48 min</dd></div>
+          <div><dt>Fila ahora</dt><dd>4</dd></div>
+        </dl>
+        <div class="card">
+          <svg viewBox="0 0 340 120" style="width: 100%; display: block" role="img" aria-label="Longitud de la fila en las primeras 5 horas, entre 0 y 8 clientes.">
+            <line x1="20" y1="100" x2="330" y2="100" stroke="#5A6478"></line>
+            <path d="M20 100 H40 V92 H60 V84 H80 V92 H100 V76 H120 V68 H140 V76 H160 V60 H180 V52 H200 V68 H220 V76 H240 V60 H260 V44 H275 V36" fill="none" stroke="#0B6A88" stroke-width="2.5"></path>
+            <line x1="275" y1="10" x2="275" y2="100" stroke="#C2410C" stroke-width="2"></line>
+            <text x="20" y="116" font-family="Inter, sans-serif" font-size="11" fill="#5A6478">0 h</text><text x="262" y="116" font-family="Inter, sans-serif" font-size="11" fill="#5A6478">05:12</text>
+          </svg>
+        </div>
+        <div class="card" style="padding: 4px 12px">
+          <div class="acc">Parámetros <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7 L9 12 L14 7"></path></svg></div>
+        </div>
+        <div class="tabs" role="tablist"><span class="on">Qué simula</span><span>Parámetros</span><span>Efectos</span><span>Negocio</span></div>
+      </div>
+      <div class="ph-run" role="group" aria-label="Control de la simulación">
+        <button class="b p" type="button"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect></svg>Pausar</button>
+        <button class="b" type="button" aria-label="Siguiente evento"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2 L11 8 L3 14 Z M12 2 H14 V14 H12 Z" fill="currentColor"></path></svg></button>
+        <button class="b" type="button" aria-label="Reiniciar"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8 A5 5 0 1 0 5 4"></path><path d="M3 2 V5 H6"></path></svg></button>
+      </div>
+    </div>
+    <p class="desc">Barra de control fija abajo, al alcance del pulgar. Los indicadores se actualizan con <code>aria-live="polite"</code> a lo sumo una vez por segundo.</p>
+  </div>
+
+  <div>
+    <p class="cap"><span class="badge" style="background: #FDF1E4; color: #8A3B0A">● En pausa</span> estado 2</p>
+    <div class="phone">
+      <header class="ph-top">
+        <button class="icon-btn" type="button" aria-label="Abrir menú de simulaciones"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5 H17 M3 10 H17 M3 15 H17"></path></svg></button>
+        <span class="t">SimEco</span>
+        <button class="icon-btn" type="button" aria-label="Compartir enlace"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="10" r="2"></circle><circle cx="15" cy="5" r="2"></circle><circle cx="15" cy="15" r="2"></circle><path d="M7 9 L13 6 M7 11 L13 14"></path></svg></button>
+      </header>
+      <div class="ph-body">
+        <div><p class="eyebrow">08 · Colas</p><h2 class="h1">Teoría de colas</h2></div>
+        <div class="banner" role="status" style="background: #FDF1E4; border: 1px solid #F1C99E; color: #14213D">
+          <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true" style="flex: none; margin-top: 1px"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="#8A3B0A"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="#8A3B0A"></rect></svg>
+          <span>Pausado en 05:12 h. Si cambias un parámetro, la simulación se reinicia con la misma semilla.</span>
+        </div>
+        <dl class="kp">
+          <div><dt>Utilización ρ</dt><dd>0.80</dd></div>
+          <div><dt>En sistema L</dt><dd>4.00</dd></div>
+        </dl>
+        <div class="card" style="display: flex; flex-direction: column; gap: 4px">
+          <div class="acc" style="padding: 0">Parámetros <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 11 L9 6 L14 11"></path></svg></div>
+          <div class="sl"><div class="r"><label for="m-lam">Llegadas λ</label><output for="m-lam">4.0 /h</output></div><input id="m-lam" type="range" min="0.1" max="30" step="0.1" value="4"></div>
+          <div class="sl"><div class="r"><label for="m-mu">Servicio μ</label><output for="m-mu">5.0 /h</output></div><input id="m-mu" type="range" min="0.1" max="30" step="0.1" value="5"></div>
+          <div class="sl"><div class="r"><label for="m-c">Servidores c</label><output for="m-c">1</output></div><input id="m-c" type="range" min="1" max="10" step="1" value="1"></div>
+          <div class="sl"><div class="r"><label for="m-cw">Costo de espera</label><output for="m-cw">$20</output></div><input id="m-cw" type="range" min="0" max="200" step="1" value="20"></div>
+        </div>
+      </div>
+      <div class="ph-run" role="group" aria-label="Control de la simulación">
+        <button class="b p" type="button"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg>Reanudar</button>
+        <button class="b" type="button" aria-label="Siguiente evento"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2 L11 8 L3 14 Z M12 2 H14 V14 H12 Z" fill="currentColor"></path></svg></button>
+        <button class="b" type="button" aria-label="Reiniciar"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8 A5 5 0 1 0 5 4"></path><path d="M3 2 V5 H6"></path></svg></button>
+      </div>
+    </div>
+    <p class="desc">En pausa, el panel de parámetros se abre y la animación se congela. El reloj y los datos quedan visibles para discutir en clase.</p>
+  </div>
+
+  <div>
+    <p class="cap"><span class="badge" style="background: #EEF2F7; color: #3D475C">● Reiniciada</span> estado 3</p>
+    <div class="phone">
+      <header class="ph-top">
+        <button class="icon-btn" type="button" aria-label="Abrir menú de simulaciones"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5 H17 M3 10 H17 M3 15 H17"></path></svg></button>
+        <span class="t">SimEco</span>
+        <button class="icon-btn" type="button" aria-label="Compartir enlace"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="10" r="2"></circle><circle cx="15" cy="5" r="2"></circle><circle cx="15" cy="15" r="2"></circle><path d="M7 9 L13 6 M7 11 L13 14"></path></svg></button>
+      </header>
+      <div class="ph-body">
+        <div><p class="eyebrow">08 · Colas</p><h2 class="h1">Teoría de colas</h2></div>
+        <dl class="kp">
+          <div><dt>Utilización ρ</dt><dd>0.80</dd></div>
+          <div><dt>En sistema L</dt><dd>4.00</dd></div>
+          <div><dt>Espera W<sub>q</sub></dt><dd>48 min</dd></div>
+          <div><dt>Fila ahora</dt><dd>—</dd></div>
+        </dl>
+        <div class="card" style="height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-style: dashed; text-align: center">
+          <svg width="32" height="32" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="#9CC9DA"></path></svg>
+          <span style="font-size: 14px; color: #3D475C">Pulsa <b>Iniciar</b> para simular 8 h<br>con la semilla 42.</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #3D475C">Los valores teóricos se muestran desde el inicio; los simulados aparecen al correr.</p>
+        <div class="tabs" role="tablist"><span>Qué simula</span><span>Parámetros</span><span class="on">Efectos</span><span>Negocio</span></div>
+        <ul style="margin: 0; padding-left: 18px; font-size: 14px; color: #3D475C; display: flex; flex-direction: column; gap: 6px">
+          <li>Cerca de ρ = 1 la fila crece de forma explosiva.</li>
+          <li>En una línea, solo el cuello de botella fija la producción.</li>
+        </ul>
+      </div>
+      <div class="ph-run" role="group" aria-label="Control de la simulación">
+        <button class="b p" type="button"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg>Iniciar</button>
+        <button class="b" type="button" aria-label="Siguiente evento" disabled style="opacity: 0.45"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2 L11 8 L3 14 Z M12 2 H14 V14 H12 Z" fill="currentColor"></path></svg></button>
+        <button class="b" type="button" aria-label="Reiniciar" disabled style="opacity: 0.45"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8 A5 5 0 1 0 5 4"></path><path d="M3 2 V5 H6"></path></svg></button>
+      </div>
+    </div>
+    <p class="desc">Reiniciar regresa el reloj a 0, vacía la gráfica temporal y regenera el mismo PRNG desde la semilla: la siguiente corrida es idéntica.</p>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1320,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

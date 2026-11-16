@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Punto de reorden</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:14px}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.runbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:10px 12px}
+.speed{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.speed select{min-height:40px;border-radius:8px;border:1px solid #CBD3DF;padding:0 8px;font:600 13px Inter,sans-serif;background:#FFFFFF;color:#14213D}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px}
+.prog{flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#5A6478;font-family:'JetBrains Mono',monospace}
+.bar{height:6px;background:#E6EBF2;border-radius:3px;overflow:hidden}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0}
+.kpi{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:#5A6478;font-weight:600}
+.kpi dd{margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#14213D;line-height:1.2}
+.kpi small{display:block;font-size:12px;color:#5A6478;font-family:Inter,sans-serif;font-weight:500}
+.kpi.hl{background:#DCEEF4;border-color:#9CC9DA}
+.chead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;font-weight:600;color:#0B6A88;min-height:32px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/punto-reorden?d=20&amp;sd=5&amp;L=7&amp;ns=95&amp;Q=400&amp;dias=120&amp;seed=42</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <label class="seed" for="seed">Semilla <input id="seed" type="number" value="42" inputmode="numeric"></label>
+      <button class="btn dark sm" type="button">Guardar escenario</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html" aria-current="page"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">04 · Inventarios · simulación dinámica</p>
+        <h1>Punto de reorden con demanda variable</h1>
+        <p class="lede">Simula día a día un inventario cuya demanda es aleatoria. Decide cuánto inventario de seguridad mantener para no quedarte sin producto mientras llega el pedido.</p>
+      </section>
+
+      <div class="runbar" role="group" aria-label="Control de la simulación">
+        <button class="btn primary" type="button">
+          <sc-if value="{{ running }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect></svg></sc-if>
+          <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg></sc-if>
+          {{ playLabel }}
+        </button>
+        <button class="btn" type="button">Avanzar 1 día</button>
+        <button class="btn" type="button">Reiniciar</button>
+        <label class="speed" for="vel">Velocidad
+          <select id="vel"><option>0.5×</option><option selected>1×</option><option>2×</option><option>4×</option></select>
+        </label>
+        <div class="prog" aria-label="Progreso">
+          <span>{{ dayLabel }}</span>
+          <div class="bar"><div style="height: 100%; width: {{ pct }}; background: #0B6A88"></div></div>
+        </div>
+        <span class="badge" role="status" style="background: {{ badgeBg }}; color: {{ badgeFg }}">
+          <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"></circle></svg>{{ stateLabel }}
+        </span>
+      </div>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Parámetros</h2>
+          <div class="field">
+            <div class="frow"><label for="d">Demanda diaria promedio (d̄)</label><output for="d">20 u/día</output></div>
+            <input id="d" type="range" min="1" max="200" step="1" value="20" aria-describedby="d-h">
+            <p class="hint" id="d-h">1–200 unidades por día</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="sd">Variabilidad diaria (σ<sub>d</sub>)</label><output for="sd">5 u</output></div>
+            <input id="sd" type="range" min="0" max="50" step="0.5" value="5" aria-describedby="sd-h">
+            <p class="hint" id="sd-h">0–50 unidades · desviación estándar (normal, Box-Muller)</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="L">Tiempo de entrega (L)</label><output for="L">7 días</output></div>
+            <input id="L" type="range" min="1" max="30" step="1" value="7" aria-describedby="L-h">
+            <p class="hint" id="L-h">1–30 días</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="ns">Nivel de servicio objetivo</label><output for="ns">95.0 % · z = 1.645</output></div>
+            <input id="ns" type="range" min="50" max="99.9" step="0.1" value="95" aria-describedby="ns-h">
+            <p class="hint" id="ns-h">50–99.9 % · probabilidad de no tener faltante en un ciclo</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="Q">Tamaño de pedido (Q)</label><output for="Q">400 u</output></div>
+            <input id="Q" type="range" min="10" max="2000" step="10" value="400" aria-describedby="Q-h">
+            <p class="hint" id="Q-h">10–2,000 unidades · puedes usar el Q* de EOQ</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="dias">Horizonte</label><output for="dias">120 días</output></div>
+            <input id="dias" type="range" min="30" max="365" step="5" value="120" aria-describedby="dias-h">
+            <p class="hint" id="dias-h">30–365 días simulados</p>
+          </div>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi"><dt>Inventario de seguridad</dt><dd>21.8 <small>unidades</small></dd></div>
+            <div class="kpi hl"><dt>Punto de reorden</dt><dd>161.8 <small>unidades</small></dd></div>
+            <div class="kpi"><dt>Ciclos con faltante</dt><dd>1 de 6 <small>simulado · objetivo ≤ 5 %</small></dd></div>
+            <div class="kpi"><dt>Tasa de surtido</dt><dd>99.6 % <small>unidades atendidas</small></dd></div>
+          </dl>
+
+          <section class="card chart" aria-labelledby="g-h">
+            <div class="chead"><h2 id="g-h">Inventario disponible día a día</h2><span class="hint">Chart.js · line + anotaciones ROP/SS · animado</span></div>
+            <svg viewBox="0 0 720 330" role="img" aria-label="Inventario de 120 días con demanda aleatoria. Seis pedidos se colocan cuando el inventario cruza el punto de reorden de 161.8. En el día 59 el inventario llega a cero un día antes de recibir el pedido.">
+              <g stroke="#E6EBF2" stroke-width="1">
+                <line x1="60" y1="30" x2="700" y2="30"></line><line x1="60" y1="87.8" x2="700" y2="87.8"></line><line x1="60" y1="145.6" x2="700" y2="145.6"></line><line x1="60" y1="232.2" x2="700" y2="232.2"></line>
+              </g>
+              <rect x="372" y="30" width="10" height="260" fill="#C2410C" fill-opacity="0.16"></rect>
+              <line x1="60" y1="290" x2="700" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="196.5" x2="700" y2="196.5" stroke="#8A3B0A" stroke-width="1.5" stroke-dasharray="6 4"></line>
+              <line x1="60" y1="277.4" x2="700" y2="277.4" stroke="#6D5BD0" stroke-width="1.5" stroke-dasharray="2 4"></line>
+              <polyline points="60,47.3 86.7,106.3 113.3,161.7 129.3,197.6 150.7,240.9 166.7,277.3 166.7,46.2 193.3,99.3 220,153.6 236,194.7 257.3,248.4 273.3,285.4 273.3,54.3 300,116.7 326.7,177.3 337.3,198.7 358.7,255.3 374.7,290 380,290 380,58.9 406.7,115.5 433.3,171.6 444,195.8 465.3,240.9 481.3,272.7 481.3,41.6 508,99.3 534.7,156 550.7,202.2 572,249.6 588,281.9 588,50.8 614.7,106.3 641.3,161.7 657.3,198.7 678.7,243.8 694.7,272.7 694.7,41.6 700,53.1" fill="none" stroke="#0B6A88" stroke-width="2.5" stroke-linejoin="round"></polyline>
+              <g fill="#14213D">
+                <path d="M129.3 188 l-6 -10 h12 z"></path><path d="M236 188 l-6 -10 h12 z"></path><path d="M337.3 188 l-6 -10 h12 z"></path><path d="M444 188 l-6 -10 h12 z"></path><path d="M550.7 188 l-6 -10 h12 z"></path><path d="M657.3 188 l-6 -10 h12 z"></path>
+              </g>
+              <text x="386" y="48" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#8A3B0A">Faltante día 59</text>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="294" text-anchor="end">0</text><text x="52" y="236" text-anchor="end">100</text><text x="52" y="149" text-anchor="end">250</text><text x="52" y="92" text-anchor="end">350</text><text x="52" y="34" text-anchor="end">450</text>
+                <text x="60" y="310" text-anchor="middle">0</text><text x="220" y="310" text-anchor="middle">30</text><text x="380" y="310" text-anchor="middle">60</text><text x="540" y="310" text-anchor="middle">90</text><text x="700" y="310" text-anchor="middle">120</text>
+                <text x="380" y="328" text-anchor="middle">Día</text>
+                <text x="14" y="20">Unidades en inventario</text>
+              </g>
+            </svg>
+            <ul class="legend">
+              <li><span class="sw" style="background: #0B6A88"></span>Inventario disponible</li>
+              <li><span class="sw" style="background: #8A3B0A"></span>Punto de reorden (161.8)</li>
+              <li><span class="sw" style="background: #6D5BD0"></span>Inventario de seguridad (21.8)</li>
+              <li><svg width="12" height="10" viewBox="0 0 12 10" aria-hidden="true" style="margin-right: 6px"><path d="M6 10 L0 0 H12 Z" fill="#14213D"></path></svg>Pedido colocado</li>
+            </ul>
+            <details>
+              <summary>Ver datos como tabla</summary>
+              <div class="tbl">
+                <table>
+                  <thead><tr><th scope="col">Ciclo</th><th scope="col">Día pedido</th><th scope="col">Día llegada</th><th scope="col">Demanda en L</th><th scope="col">Mínimo</th><th scope="col">Faltante</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td>13</td><td>20</td><td>138</td><td>22</td><td>0</td></tr>
+                    <tr><td>2</td><td>33</td><td>40</td><td>157</td><td>8</td><td>0</td></tr>
+                    <tr><td>3</td><td>52</td><td>60</td><td>171</td><td>0</td><td>13</td></tr>
+                    <tr><td>4</td><td>72</td><td>79</td><td>133</td><td>30</td><td>0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+            <div class="math">
+              <span><i>SS</i> = <i>z</i>·<i>σ</i><sub><i>d</i></sub>·√<i>L</i></span>
+              <span><i>ROP</i> = <i>d̄</i>·<i>L</i> + <i>SS</i></span>
+              <span><i>D</i><sub><i>t</i></sub> ~ <i>N</i>(<i>d̄</i>, <i>σ</i><sub><i>d</i></sub>)</span>
+            </div>
+            <p class="note">Regla diaria: si inventario + pedidos en tránsito ≤ ROP, se pide Q; el pedido llega L días después. Demanda negativa se trunca a 0. La demanda no atendida se pierde.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>Un sistema de revisión continua con demanda aleatoria. El punto de reorden cubre la demanda esperada durante la entrega más un colchón para la incertidumbre.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>d̄, σ<sub>d</sub></dt><dd>Demanda típica por día y qué tanto varía.</dd></div>
+            <div><dt>L</dt><dd>Días de espera del proveedor: tiempo expuesto al riesgo.</dd></div>
+            <div><dt>Nivel de servicio</dt><dd>Qué tan seguro quieres estar de no tener faltantes; define z.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Más variabilidad o más L exigen más inventario de seguridad.</li>
+            <li>Pasar de 95 % a 99 % de servicio sube el SS cerca de 41 %.</li>
+            <li>Con σ = 0 el modelo vuelve al caso determinístico de EOQ.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>Configurar mínimos en el ERP, negociar tiempos de entrega más cortos, decidir qué productos merecen alto nivel de servicio y cuantificar el costo de una promesa de disponibilidad.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["corriendo","pausa","reiniciada"],"default":"pausa"},"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const e = this.props.estado ?? 'pausa';
+    const map = {
+      corriendo: { stateLabel: 'Corriendo', badgeBg: '#DCEEF4', badgeFg: '#084E64', playLabel: 'Pausar', dayLabel: 'Día 84 de 120', pct: '70%' },
+      pausa: { stateLabel: 'En pausa', badgeBg: '#FDF1E4', badgeFg: '#8A3B0A', playLabel: 'Reanudar', dayLabel: 'Día 120 de 120', pct: '100%' },
+      reiniciada: { stateLabel: 'Reiniciada', badgeBg: '#EEF2F7', badgeFg: '#3D475C', playLabel: 'Iniciar', dayLabel: 'Día 0 de 120', pct: '0%' }
+    };
+    const v = map[e] || map.pausa;
+    return Object.assign({ running: e === 'corriendo', notRunning: e !== 'corriendo' }, v);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Cantidad económica de pedido</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:14px}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0}
+.kpi{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:#5A6478;font-weight:600}
+.kpi dd{margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#14213D;line-height:1.2}
+.kpi small{display:block;font-size:12px;color:#5A6478;font-family:Inter,sans-serif;font-weight:500}
+.kpi.hl{background:#DCEEF4;border-color:#9CC9DA}
+.chead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;font-weight:600;color:#0B6A88;min-height:32px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.warn{display:flex;gap:12px;align-items:flex-start;background:#FDF1E4;border:1px solid #F1C99E;border-radius:12px;padding:14px 16px;font-size:14px}
+.warn b{color:#8A3B0A}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/eoq?D=1200&amp;S=50&amp;H=2&amp;L=5&amp;Q=400</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <button class="btn dark sm" type="button">Guardar escenario</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html" aria-current="page"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">03 · Inventarios</p>
+        <h1>Cantidad económica de pedido (EOQ)</h1>
+        <p class="lede">Calcula cuántas unidades conviene pedir cada vez para que la suma de costos de ordenar y de mantener inventario sea la mínima posible, y compárala con el lote que usas hoy.</p>
+      </section>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Parámetros</h2>
+          <div class="field">
+            <div class="frow"><label for="D">Demanda anual (D)</label><output for="D">1,200 u/año</output></div>
+            <input id="D" type="range" min="100" max="20000" step="100" value="1200" aria-describedby="D-h">
+            <p class="hint" id="D-h">100–20,000 unidades por año</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="S">Costo por pedido (S)</label><output for="S">$50 / pedido</output></div>
+            <input id="S" type="range" min="1" max="500" step="1" value="50" aria-describedby="S-h">
+            <p class="hint" id="S-h">$1–$500 · trámite, flete fijo, recepción</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="H">Costo de mantener (H)</label><output for="H">$2.00 / u·año</output></div>
+            <input id="H" type="range" min="0.1" max="50" step="0.1" value="2" aria-describedby="H-h">
+            <p class="hint" id="H-h">$0.10–$50 por unidad al año · almacén, capital, merma</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="L">Tiempo de entrega (L)</label><output for="L">5 días</output></div>
+            <input id="L" type="range" min="0" max="60" step="1" value="5" aria-describedby="L-h">
+            <p class="hint" id="L-h">0–60 días · para el punto de reorden determinístico</p>
+          </div>
+          <p class="group">Comparar con tu política actual</p>
+          <div class="field">
+            <div class="frow"><label for="Q">Lote actual (Q)</label><output for="Q">400 u</output></div>
+            <input id="Q" type="range" min="10" max="2000" step="10" value="400" aria-describedby="Q-h">
+            <p class="hint" id="Q-h">10–2,000 unidades por pedido</p>
+          </div>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi hl"><dt>Lote óptimo Q*</dt><dd>244.9 <small>unidades</small></dd></div>
+            <div class="kpi"><dt>Pedidos por año N</dt><dd>4.90</dd></div>
+            <div class="kpi"><dt>Tiempo entre pedidos</dt><dd>74.5 <small>días</small></dd></div>
+            <div class="kpi"><dt>Costo total mínimo</dt><dd>$489.90 <small>por año</small></dd></div>
+            <div class="kpi"><dt>Punto de reorden</dt><dd>16.4 <small>unidades (d·L)</small></dd></div>
+          </dl>
+
+          <div class="warn" role="status">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A3B0A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7 V13 M12 16.5 V17"></path></svg>
+            <span><b>Tu lote de 400 u cuesta $550.00 al año</b>, $60.10 (12.3 %) más que el óptimo. Pides de más: el costo de mantener ($400) supera al de ordenar ($150).</span>
+          </div>
+
+          <section class="card chart" aria-labelledby="g-h">
+            <div class="chead"><h2 id="g-h">Costo anual según tamaño de lote</h2><span class="hint">Chart.js · line, 3 series + punto Q*</span></div>
+            <svg viewBox="0 0 720 330" role="img" aria-label="Costos anuales contra tamaño de lote de 50 a 600 unidades. El costo de ordenar baja, el de mantener sube y el costo total forma una U con mínimo de 489.90 pesos en 244.9 unidades. El lote actual de 400 cuesta 550.">
+              <g stroke="#E6EBF2" stroke-width="1">
+                <line x1="60" y1="30" x2="700" y2="30"></line><line x1="60" y1="90" x2="700" y2="90"></line><line x1="60" y1="150" x2="700" y2="150"></line><line x1="60" y1="210" x2="700" y2="210"></line><line x1="60" y1="270" x2="700" y2="270"></line>
+              </g>
+              <line x1="60" y1="290" x2="700" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="290" stroke="#5A6478"></line>
+              <polyline points="60,50 89.1,130 118.2,170 176.4,210 234.5,230 286.9,241 350.9,250 467.3,260 583.6,266 700,270" fill="none" stroke="#C2410C" stroke-width="2.5"></polyline>
+              <line x1="60" y1="280" x2="700" y2="170" stroke="#6D5BD0" stroke-width="2.5" stroke-dasharray="7 5"></line>
+              <polyline points="60,40 89.1,115 118.2,150 176.4,180 234.5,190 286.9,192 350.9,190 467.3,180 583.6,166 700,150" fill="none" stroke="#0B6A88" stroke-width="3.5"></polyline>
+              <line x1="286.9" y1="192" x2="286.9" y2="290" stroke="#14213D" stroke-dasharray="4 4"></line>
+              <circle cx="286.9" cy="192" r="7" fill="#14213D" stroke="#FFFFFF" stroke-width="2"></circle>
+              <text x="296" y="215" font-family="JetBrains Mono, monospace" font-size="13" font-weight="600" fill="#14213D">Q* = 244.9 · $489.90</text>
+              <circle cx="467.3" cy="180" r="6" fill="#FFFFFF" stroke="#8A3B0A" stroke-width="2.5"></circle>
+              <text x="476" y="172" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#8A3B0A">Actual 400 · $550</text>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="294" text-anchor="end">0</text><text x="52" y="214" text-anchor="end">400</text><text x="52" y="134" text-anchor="end">800</text><text x="52" y="54" text-anchor="end">1,200</text>
+                <text x="60" y="310" text-anchor="middle">50</text><text x="176.4" y="310" text-anchor="middle">150</text><text x="292.7" y="310" text-anchor="middle">250</text><text x="409.1" y="310" text-anchor="middle">350</text><text x="525.5" y="310" text-anchor="middle">450</text><text x="641.8" y="310" text-anchor="middle">550</text>
+                <text x="380" y="328" text-anchor="middle">Tamaño de lote Q (unidades)</text>
+                <text x="14" y="20">Costo anual ($)</text>
+              </g>
+            </svg>
+            <ul class="legend">
+              <li><span class="sw" style="background: #0B6A88"></span>Costo total</li>
+              <li><span class="sw" style="background: #C2410C"></span>Costo de ordenar D·S/Q</li>
+              <li><span class="sw" style="background: #6D5BD0"></span>Costo de mantener H·Q/2</li>
+            </ul>
+            <details>
+              <summary>Ver datos como tabla</summary>
+              <div class="tbl">
+                <table>
+                  <thead><tr><th scope="col">Q</th><th scope="col">Ordenar</th><th scope="col">Mantener</th><th scope="col">Total</th></tr></thead>
+                  <tbody>
+                    <tr><td>100</td><td>600.00</td><td>100.00</td><td>700.00</td></tr>
+                    <tr><td>200</td><td>300.00</td><td>200.00</td><td>500.00</td></tr>
+                    <tr><td>244.9 (Q*)</td><td>244.95</td><td>244.95</td><td>489.90</td></tr>
+                    <tr><td>300</td><td>200.00</td><td>300.00</td><td>500.00</td></tr>
+                    <tr><td>400</td><td>150.00</td><td>400.00</td><td>550.00</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          <section class="card chart" aria-labelledby="g2-h">
+            <div class="chead"><h2 id="g2-h">Nivel de inventario con Q*</h2><span class="hint">Chart.js · line escalonada, 365 días</span></div>
+            <svg viewBox="0 0 720 190" role="img" aria-label="Diente de sierra: el inventario parte de 244.9 unidades, baja a cero en 74.5 días y se repone; cinco ciclos en un año.">
+              <line x1="60" y1="150" x2="700" y2="150" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="150" stroke="#5A6478"></line>
+              <line x1="60" y1="142.6" x2="700" y2="142.6" stroke="#8A3B0A" stroke-dasharray="4 4"></line>
+              <polyline points="60,39.8 190.6,150 190.6,39.8 321.3,150 321.3,39.8 451.9,150 451.9,39.8 582.6,150 582.6,39.8 700,138.9" fill="none" stroke="#0B6A88" stroke-width="2.5" stroke-linejoin="round"></polyline>
+              <line x1="60" y1="94.9" x2="700" y2="94.9" stroke="#6D5BD0" stroke-dasharray="2 4"></line>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="154" text-anchor="end">0</text><text x="52" y="44" text-anchor="end">245</text>
+                <text x="706" y="98" fill="#4B3BA8">Q*/2</text>
+                <text x="706" y="146" fill="#8A3B0A">ROP</text>
+                <text x="60" y="170" text-anchor="middle">0</text><text x="380" y="170" text-anchor="middle">182</text><text x="700" y="170" text-anchor="middle">365</text>
+                <text x="380" y="186" text-anchor="middle">Días</text>
+              </g>
+            </svg>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+            <div class="math">
+              <span><i>Q</i>* = √(2<i>DS</i> ⁄ <i>H</i>)</span>
+              <span><i>CT</i>(<i>Q</i>) = <i>DS</i>⁄<i>Q</i> + <i>HQ</i>⁄2</span>
+              <span><i>N</i> = <i>D</i>⁄<i>Q</i>*</span>
+              <span><i>ROP</i> = <i>d</i>·<i>L</i></span>
+            </div>
+            <p class="note">Supuestos: demanda constante y conocida, entrega completa, sin faltantes ni descuentos. d = D/365.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>El dilema de pedir mucho (pocas órdenes, mucho inventario) o poco (inventario bajo, muchas órdenes). El EOQ encuentra el equilibrio donde ambos costos se igualan.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>D</dt><dd>Unidades que se venden o consumen en un año.</dd></div>
+            <div><dt>S</dt><dd>Costo fijo de colocar y recibir un pedido, sin importar su tamaño.</dd></div>
+            <div><dt>H</dt><dd>Costo de tener una unidad almacenada durante un año.</dd></div>
+            <div><dt>L</dt><dd>Días entre pedir y recibir.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Q* crece con la raíz de D: cuadruplicar la demanda solo duplica el lote.</li>
+            <li>Subir S favorece lotes grandes; subir H, lotes chicos.</li>
+            <li>La curva es plana cerca del óptimo: errores pequeños en Q cuestan poco.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>Definir lotes de compra o de producción, negociar costos de flete, justificar la reducción de costos de preparación (filosofía lean) y estimar el capital inmovilizado en inventario.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

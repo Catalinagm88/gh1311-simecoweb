@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Oferta y demanda</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:14px}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:600}
+.check input{width:20px;height:20px;accent-color:#0B6A88}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0}
+.kpi{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:#5A6478;font-weight:600}
+.kpi dd{margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#14213D;line-height:1.2}
+.kpi small{display:block;font-size:12px;color:#5A6478;font-family:Inter,sans-serif;font-weight:500}
+.chead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.box{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;margin-right:6px}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;font-weight:600;color:#0B6A88;min-height:32px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 10px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/oferta-demanda?a=100&amp;b=2&amp;c=10&amp;d=1.5&amp;t=0</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <button class="btn dark sm" type="button">Guardar escenario</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html" aria-current="page"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">01 · Mercados</p>
+        <h1>Oferta y demanda</h1>
+        <p class="lede">Encuentra el precio y la cantidad de equilibrio de un mercado y observa cómo se desplazan cuando cambian los gustos, los costos o se aplica un impuesto.</p>
+      </section>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Parámetros</h2>
+          <p class="group">Demanda · Q<sub>d</sub> = a − b·P</p>
+          <div class="field">
+            <div class="frow"><label for="a">Demanda base (a)</label><output for="a">100 u</output></div>
+            <input id="a" type="range" min="20" max="200" step="1" value="100" aria-describedby="a-h">
+            <p class="hint" id="a-h">20–200 unidades · cantidad pedida si el precio fuera 0</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="b">Sensibilidad al precio (b)</label><output for="b">2.0 u/$</output></div>
+            <input id="b" type="range" min="0.5" max="5" step="0.1" value="2" aria-describedby="b-h">
+            <p class="hint" id="b-h">0.5–5 · unidades que se dejan de comprar por cada $1</p>
+          </div>
+          <p class="group">Oferta · Q<sub>s</sub> = c + d·P</p>
+          <div class="field">
+            <div class="frow"><label for="c">Oferta base (c)</label><output for="c">10 u</output></div>
+            <input id="c" type="range" min="-50" max="100" step="1" value="10" aria-describedby="c-h">
+            <p class="hint" id="c-h">−50–100 unidades · refleja costos y tecnología</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="d">Respuesta de la oferta (d)</label><output for="d">1.5 u/$</output></div>
+            <input id="d" type="range" min="0.5" max="5" step="0.1" value="1.5" aria-describedby="d-h">
+            <p class="hint" id="d-h">0.5–5 · unidades extra ofrecidas por cada $1</p>
+          </div>
+          <p class="group">Intervención</p>
+          <div class="field">
+            <div class="frow"><label for="t">Impuesto por unidad (t)</label><output for="t">$0.00</output></div>
+            <input id="t" type="range" min="0" max="20" step="0.5" value="0" aria-describedby="t-h">
+            <p class="hint" id="t-h">$0–$20 por unidad · lo paga el vendedor</p>
+          </div>
+          <label class="check"><input type="checkbox"> Aplicar precio máximo</label>
+          <div class="row">
+            <button class="btn sm" type="button">Shock: demanda +20%</button>
+            <button class="btn sm" type="button">Shock: costos +15%</button>
+          </div>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <dl class="kpis" aria-live="polite">
+            <div class="kpi"><dt>Precio de equilibrio P*</dt><dd>$25.71</dd></div>
+            <div class="kpi"><dt>Cantidad de equilibrio Q*</dt><dd>48.6 <small>unidades</small></dd></div>
+            <div class="kpi"><dt>Excedente del consumidor</dt><dd>$589.8</dd></div>
+            <div class="kpi"><dt>Excedente del productor</dt><dd>$753.1</dd></div>
+          </dl>
+
+          <section class="card chart" aria-labelledby="g-h">
+            <div class="chead"><h2 id="g-h">Curvas de mercado</h2><span class="hint">Chart.js · tipo line, ejes lineales</span></div>
+            <svg viewBox="0 0 720 330" role="img" aria-label="Gráfica de oferta y demanda. La demanda baja de precio 50 con cantidad 0 a precio 0 con cantidad 100. La oferta sube desde cantidad 10 a precio 0. Se cruzan en precio 25.71 y cantidad 48.6.">
+              <g stroke="#E6EBF2" stroke-width="1">
+                <line x1="60" y1="30" x2="700" y2="30"></line><line x1="60" y1="82" x2="700" y2="82"></line><line x1="60" y1="134" x2="700" y2="134"></line><line x1="60" y1="186" x2="700" y2="186"></line><line x1="60" y1="238" x2="700" y2="238"></line>
+                <line x1="188" y1="30" x2="188" y2="290"></line><line x1="316" y1="30" x2="316" y2="290"></line><line x1="444" y1="30" x2="444" y2="290"></line><line x1="572" y1="30" x2="572" y2="290"></line><line x1="700" y1="30" x2="700" y2="290"></line>
+              </g>
+              <polygon points="60,30 370.9,156.3 60,156.3" fill="#0B6A88" fill-opacity="0.14"></polygon>
+              <polygon points="60,156.3 370.9,156.3 124,290 60,290" fill="#C2410C" fill-opacity="0.12"></polygon>
+              <line x1="60" y1="290" x2="700" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="60" y2="290" stroke="#5A6478"></line>
+              <line x1="60" y1="30" x2="700" y2="290" stroke="#0B6A88" stroke-width="3"></line>
+              <line x1="124" y1="290" x2="604" y2="30" stroke="#C2410C" stroke-width="3"></line>
+              <line x1="60" y1="156.3" x2="370.9" y2="156.3" stroke="#14213D" stroke-dasharray="4 4"></line>
+              <line x1="370.9" y1="156.3" x2="370.9" y2="290" stroke="#14213D" stroke-dasharray="4 4"></line>
+              <circle cx="370.9" cy="156.3" r="7" fill="#14213D" stroke="#FFFFFF" stroke-width="2"></circle>
+              <text x="384" y="148" font-family="JetBrains Mono, monospace" font-size="13" fill="#14213D" font-weight="600">E (48.6, $25.71)</text>
+              <text x="612" y="40" font-family="Inter, sans-serif" font-size="13" fill="#8A3B0A" font-weight="700">Oferta</text>
+              <text x="600" y="258" font-family="Inter, sans-serif" font-size="13" fill="#084E64" font-weight="700">Demanda</text>
+              <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                <text x="52" y="294" text-anchor="end">0</text><text x="52" y="242" text-anchor="end">10</text><text x="52" y="190" text-anchor="end">20</text><text x="52" y="138" text-anchor="end">30</text><text x="52" y="86" text-anchor="end">40</text><text x="52" y="34" text-anchor="end">50</text>
+                <text x="60" y="310" text-anchor="middle">0</text><text x="188" y="310" text-anchor="middle">20</text><text x="316" y="310" text-anchor="middle">40</text><text x="444" y="310" text-anchor="middle">60</text><text x="572" y="310" text-anchor="middle">80</text><text x="700" y="310" text-anchor="middle">100</text>
+                <text x="380" y="328" text-anchor="middle">Cantidad (unidades)</text>
+                <text x="14" y="20">Precio ($)</text>
+              </g>
+            </svg>
+            <ul class="legend">
+              <li><span class="sw" style="background: #0B6A88"></span>Demanda</li>
+              <li><span class="sw" style="background: #C2410C"></span>Oferta</li>
+              <li><span class="box" style="background: #D3E7EE"></span>Excedente del consumidor</li>
+              <li><span class="box" style="background: #F6DDD0"></span>Excedente del productor</li>
+            </ul>
+            <details>
+              <summary>Ver datos como tabla</summary>
+              <div class="tbl">
+                <table>
+                  <caption class="hint" style="text-align: left">Cantidades por precio</caption>
+                  <thead><tr><th scope="col">Precio</th><th scope="col">Q demandada</th><th scope="col">Q ofrecida</th><th scope="col">Situación</th></tr></thead>
+                  <tbody>
+                    <tr><td>$10</td><td>80</td><td>25</td><td>Escasez (55)</td></tr>
+                    <tr><td>$20</td><td>60</td><td>40</td><td>Escasez (20)</td></tr>
+                    <tr><td>$25.71</td><td>48.6</td><td>48.6</td><td>Equilibrio</td></tr>
+                    <tr><td>$30</td><td>40</td><td>55</td><td>Excedente (15)</td></tr>
+                    <tr><td>$40</td><td>20</td><td>70</td><td>Excedente (50)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+            <div class="math" aria-label="P estrella igual a a menos c, entre b más d. Q estrella igual a a menos b por P estrella.">
+              <span><i>P</i>* = (<i>a</i> − <i>c</i>) ⁄ (<i>b</i> + <i>d</i>)</span>
+              <span><i>Q</i>* = <i>a</i> − <i>b</i>·<i>P</i>*</span>
+              <span><i>P</i><sub>c</sub> = (<i>a</i> − <i>c</i> + <i>d</i>·<i>t</i>) ⁄ (<i>b</i> + <i>d</i>)</span>
+            </div>
+            <p class="note">Renderizadas con KaTeX. P<sub>c</sub> es el precio que paga el comprador con impuesto t; el vendedor recibe P<sub>c</sub> − t.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>Un mercado competitivo con demanda y oferta lineales. El cruce de ambas curvas fija el precio donde lo que se quiere comprar es igual a lo que se quiere vender.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>a, b</dt><dd>Tamaño del mercado y qué tanto reacciona el comprador al precio (elasticidad).</dd></div>
+            <div><dt>c, d</dt><dd>Capacidad base de los productores y qué tanto aumentan la producción si sube el precio.</dd></div>
+            <div><dt>t</dt><dd>Impuesto por unidad que separa el precio del comprador del que recibe el vendedor.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Subir <b>a</b> desplaza la demanda: suben P* y Q*.</li>
+            <li>Bajar <b>c</b> (costos más altos) sube P* y baja Q*.</li>
+            <li>Un impuesto reduce Q* y crea pérdida de eficiencia.</li>
+            <li>Un precio máximo bajo P* genera escasez.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>Fijar precios, anticipar el impacto de un nuevo competidor o de un aumento en insumos, y estimar cuánto de un impuesto se puede trasladar al cliente.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

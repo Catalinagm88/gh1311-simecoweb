@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Tokens y breakpoints</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.sec h2{font-family:'Space Grotesk',sans-serif;font-size:22px;margin:0 0 14px}
+.sw{display:flex;flex-direction:column;gap:6px;font-size:12px}
+.chip{height:56px;border-radius:10px;border:1px solid #DDE2EA}
+.sw b{font-family:'JetBrains Mono',monospace;font-size:12px;color:#14213D}
+.sw span{color:#5A6478;font-family:'JetBrains Mono',monospace}
+.grid6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.typ{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #E6EBF2;padding:8px 0}
+.typ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:220px;flex:none}
+.bp{border:1px solid #DDE2EA;border-radius:12px;background:#FFFFFF;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bp h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0}
+.bp p{margin:0;font-size:12px;color:#3D475C}
+.wf{background:#F4F6F9;border:1px solid #DDE2EA;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px}
+.wf div{border-radius:4px}
+.st{display:flex;flex-direction:column;gap:6px;border:1px solid #DDE2EA;border-radius:12px;padding:14px;background:#FFFFFF;font-size:13px;color:#3D475C}
+.badge{display:inline-flex;align-items:center;gap:6px;font:700 12px Inter,sans-serif;padding:5px 12px;border-radius:999px;align-self:flex-start}
+.a11y{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:#3D475C}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1560px; box-sizing: border-box; padding: 48px 56px; background: #F4F6F9; font-family: Inter, system-ui, sans-serif; color: #14213D; display: flex; flex-direction: column; gap: 36px">
+  <div>
+    <p style="margin: 0; font: 600 12px Inter, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: #0B6A88">Sistema de diseño · variables CSS en <span style="font-family: 'JetBrains Mono', monospace">css/tokens.css</span></p>
+    <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 40px; margin: 6px 0 0">Tokens, breakpoints y estados</h1>
+  </div>
+
+  <section class="sec">
+    <h2>Color · tema claro</h2>
+    <div class="grid6">
+      <div class="sw"><div class="chip" style="background: #F4F6F9"></div><b>--bg</b><span>#F4F6F9</span></div>
+      <div class="sw"><div class="chip" style="background: #FFFFFF"></div><b>--surface</b><span>#FFFFFF</span></div>
+      <div class="sw"><div class="chip" style="background: #14213D"></div><b>--ink</b><span>#14213D · 15.6:1</span></div>
+      <div class="sw"><div class="chip" style="background: #5A6478"></div><b>--muted</b><span>#5A6478 · 6.0:1</span></div>
+      <div class="sw"><div class="chip" style="background: #0B6A88"></div><b>--accent</b><span>#0B6A88 · 6.0:1</span></div>
+      <div class="sw"><div class="chip" style="background: #C2410C"></div><b>--accent-2</b><span>#C2410C · 5.2:1</span></div>
+      <div class="sw"><div class="chip" style="background: #DDE2EA"></div><b>--line</b><span>#DDE2EA</span></div>
+      <div class="sw"><div class="chip" style="background: #DCEEF4"></div><b>--accent-soft</b><span>#DCEEF4</span></div>
+      <div class="sw"><div class="chip" style="background: #FDF1E4"></div><b>--warn-soft</b><span>#FDF1E4</span></div>
+      <div class="sw"><div class="chip" style="background: #8A3B0A"></div><b>--warn-ink</b><span>#8A3B0A · 7.9:1</span></div>
+      <div class="sw"><div class="chip" style="background: #E7F3EC"></div><b>--ok-soft</b><span>#E7F3EC</span></div>
+      <div class="sw"><div class="chip" style="background: #14532D"></div><b>--ok-ink</b><span>#14532D · 9.5:1</span></div>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+    <section class="sec">
+      <h2>Color · tema oscuro</h2>
+      <div style="background: #0E1626; border-radius: 14px; padding: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <div class="sw"><div class="chip" style="background: #0E1626; border-color: #2A3856"></div><b style="color: #E8EDF5">--bg</b><span style="color: #A9B4C8">#0E1626</span></div>
+        <div class="sw"><div class="chip" style="background: #16213A; border-color: #2A3856"></div><b style="color: #E8EDF5">--surface</b><span style="color: #A9B4C8">#16213A</span></div>
+        <div class="sw"><div class="chip" style="background: #E8EDF5"></div><b style="color: #E8EDF5">--ink</b><span style="color: #A9B4C8">#E8EDF5</span></div>
+        <div class="sw"><div class="chip" style="background: #A9B4C8"></div><b style="color: #E8EDF5">--muted</b><span style="color: #A9B4C8">#A9B4C8</span></div>
+        <div class="sw"><div class="chip" style="background: #4FB3D4"></div><b style="color: #E8EDF5">--accent</b><span style="color: #A9B4C8">#4FB3D4</span></div>
+        <div class="sw"><div class="chip" style="background: #F08A4B"></div><b style="color: #E8EDF5">--accent-2</b><span style="color: #A9B4C8">#F08A4B</span></div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2>Series de gráficas</h2>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px">
+        <div style="display: flex; gap: 6px; align-items: center"><span style="width: 36px; height: 14px; border-radius: 3px; background: #0B6A88"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #C2410C"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #6D5BD0"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #8A94A8"></span><span style="margin-left: 10px; color: #3D475C">Categórica: serie 1–4 (azul, naranja, violeta, gris)</span></div>
+        <div style="display: flex; gap: 6px; align-items: center"><span style="width: 36px; height: 14px; border-radius: 3px; background: #9CC9DA"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #4FA3C0"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #0B6A88"></span><span style="width: 36px; height: 14px; border-radius: 3px; background: #14213D"></span><span style="margin-left: 10px; color: #3D475C">Secuencial: eslabones cliente → fábrica</span></div>
+        <p style="margin: 0; color: #3D475C">Las series se distinguen también por grosor y trazo (continuo, discontinuo, punteado), nunca solo por color.</p>
+      </div>
+    </section>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+    <section class="sec">
+      <h2>Tipografía</h2>
+      <div class="typ"><code>--font-display · Space Grotesk 700</code><span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 40px; line-height: 1">clamp(28px, 3vw, 40px)</span></div>
+      <div class="typ"><code>--font-display · 600 · h2</code><span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px">Parámetros 18px</span></div>
+      <div class="typ"><code>--font-body · Inter 400/600</code><span style="font-size: 15px">Texto base 15px / 1.5</span></div>
+      <div class="typ"><code>--font-body · 12px muted</code><span style="font-size: 12px; color: #5A6478">Pista de rango y unidad</span></div>
+      <div class="typ"><code>--font-mono · JetBrains Mono 600</code><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 24px">244.9 u</span></div>
+      <div class="typ" style="border: 0"><code>Fórmulas · KaTeX 0.19.1</code><span style="font-family: 'Times New Roman', serif; font-size: 22px"><i>Q</i>* = √(2<i>DS</i>⁄<i>H</i>)</span></div>
+    </section>
+    <section class="sec">
+      <h2>Espaciado, radios y elevación</h2>
+      <div style="display: flex; align-items: flex-end; gap: 12px; margin-bottom: 14px">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 4px; height: 4px; background: #0B6A88"></div>4</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 8px; height: 8px; background: #0B6A88"></div>8</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 12px; height: 12px; background: #0B6A88"></div>12</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 16px; height: 16px; background: #0B6A88"></div>16</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 24px; height: 24px; background: #0B6A88"></div>24</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 32px; height: 32px; background: #0B6A88"></div>32</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font: 12px 'JetBrains Mono', monospace; color: #5A6478"><div style="width: 48px; height: 48px; background: #0B6A88"></div>48</div>
+      </div>
+      <div style="display: flex; gap: 12px; font: 12px 'JetBrains Mono', monospace; color: #5A6478">
+        <div style="width: 90px; height: 56px; background: #FFFFFF; border: 1px solid #DDE2EA; border-radius: 6px; display: flex; align-items: center; justify-content: center">r-sm 6</div>
+        <div style="width: 90px; height: 56px; background: #FFFFFF; border: 1px solid #DDE2EA; border-radius: 10px; display: flex; align-items: center; justify-content: center">r-md 10</div>
+        <div style="width: 90px; height: 56px; background: #FFFFFF; border: 1px solid #DDE2EA; border-radius: 14px; display: flex; align-items: center; justify-content: center">r-lg 14</div>
+        <div style="width: 90px; height: 56px; background: #FFFFFF; border: 1px solid #DDE2EA; border-radius: 999px; display: flex; align-items: center; justify-content: center">pill</div>
+      </div>
+      <p style="margin: 12px 0 0; font-size: 13px; color: #3D475C">Sin sombras: las tarjetas se separan con borde 1px <span style="font-family: 'JetBrains Mono', monospace">--line</span>. Objetivo táctil mínimo 44 × 44 px.</p>
+    </section>
+  </div>
+
+  <section class="sec">
+    <h2>Breakpoints (container queries sobre <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px">.main</span>)</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1.4fr 2fr; gap: 16px; align-items: start">
+      <div class="bp">
+        <h3>Móvil · &lt; 640px</h3>
+        <div class="wf" style="width: 120px">
+          <div style="height: 14px; background: #14213D"></div>
+          <div style="height: 26px; background: #DCEEF4"></div>
+          <div style="height: 40px; background: #FFFFFF; border: 1px solid #DDE2EA"></div>
+          <div style="height: 30px; background: #FFFFFF; border: 1px dashed #CBD3DF"></div>
+          <div style="height: 16px; background: #0B6A88"></div>
+        </div>
+        <p>Una columna. Menú en hoja lateral (botón hamburguesa). Parámetros en acordeón. KPIs 2 × 2. Barra de control fija abajo. Explicación en pestañas.</p>
+      </div>
+      <div class="bp">
+        <h3>Tableta · 640–1023px</h3>
+        <div class="wf" style="width: 200px">
+          <div style="height: 14px; background: #14213D"></div>
+          <div style="display: flex; gap: 4px"><div style="height: 70px; flex: 1; background: #FFFFFF; border: 1px solid #DDE2EA"></div><div style="height: 70px; flex: 1.6; background: #DCEEF4"></div></div>
+          <div style="height: 30px; background: #FFFFFF; border: 1px dashed #CBD3DF"></div>
+        </div>
+        <p>Menú como fila de chips desplazable bajo el encabezado. Parámetros y resultados en dos columnas (300px + resto). Explicación en 2 columnas.</p>
+      </div>
+      <div class="bp">
+        <h3>Escritorio · ≥ 1024px</h3>
+        <div class="wf" style="width: 300px">
+          <div style="height: 14px; background: #14213D"></div>
+          <div style="display: flex; gap: 4px"><div style="height: 90px; width: 50px; background: #EEF2F7"></div><div style="height: 90px; flex: 1; background: #FFFFFF; border: 1px solid #DDE2EA"></div><div style="height: 90px; flex: 1.8; background: #DCEEF4"></div></div>
+          <div style="height: 26px; margin-left: 54px; background: #FFFFFF; border: 1px dashed #CBD3DF"></div>
+        </div>
+        <p>Navegación lateral fija de 220px. Parámetros 300px, resultados fluidos. Explicación en 4 columnas. Ancho máximo del contenido 1440px.</p>
+      </div>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+    <section class="sec">
+      <h2>Estados de la simulación</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <div class="st"><span class="badge" style="background: #DCEEF4; color: #084E64">● Corriendo</span><span><b>data-state="running"</b>. Botón principal «Pausar». rAF activo. Parámetros bloqueados en móvil.</span></div>
+        <div class="st"><span class="badge" style="background: #FDF1E4; color: #8A3B0A">● En pausa</span><span><b>data-state="paused"</b>. «Reanudar». Animación congelada; un cambio de parámetro reinicia.</span></div>
+        <div class="st"><span class="badge" style="background: #EEF2F7; color: #3D475C">● Reiniciada</span><span><b>data-state="idle"</b>. «Iniciar». t = 0, series vacías, PRNG regenerado desde la semilla.</span></div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2>Accesibilidad</h2>
+      <ul class="a11y">
+        <li>Cada slider con <b>&lt;label for&gt;</b>, <b>&lt;output&gt;</b> con valor y unidad, y <b>aria-describedby</b> hacia su rango.</li>
+        <li>Texto ≥ 4.5:1 en ambos temas; foco visible de 3px <span style="font-family: 'JetBrains Mono', monospace">--accent</span>.</li>
+        <li>Cada gráfica: <b>role="img"</b> + aria-label con la conclusión, y tabla «Ver datos como tabla».</li>
+        <li>KPIs en <b>aria-live="polite"</b> con limitación a 1 anuncio/s.</li>
+        <li><b>prefers-reduced-motion</b>: sin animación; la simulación avanza por pasos.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

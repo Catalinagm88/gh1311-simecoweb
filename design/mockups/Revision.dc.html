@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SimEco · Sistemas de revisión</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F6F9}
+a{color:#0B6A88}a:hover{color:#084E64}
+.app{font-family:Inter,system-ui,sans-serif;color:#14213D;background:#F4F6F9;font-size:15px;line-height:1.5}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:10px 24px;background:#14213D;color:#FFFFFF}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#FFFFFF;text-decoration:none;min-height:44px}
+.brand:hover{color:#FFFFFF}
+.route{font-family:'JetBrains Mono',monospace;font-size:13px;background:#24345A;color:#CFE3F0;padding:4px 10px;border-radius:6px;overflow-wrap:anywhere}
+.spacer{flex:1 1 auto}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.seed{display:flex;align-items:center;gap:8px;font-size:13px;color:#CFE3F0}
+.seed input{width:76px;min-height:40px;box-sizing:border-box;border-radius:8px;border:1px solid #3A4C74;background:#1C2B4D;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:14px;padding:0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #CBD3DF;background:#FFFFFF;color:#14213D;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn:hover{border-color:#0B6A88}
+.btn.dark{background:#1C2B4D;border-color:#3A4C74;color:#FFFFFF}
+.btn.primary{background:#0B6A88;border-color:#0B6A88;color:#FFFFFF}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.shell{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:1 1 220px;box-sizing:border-box;padding:20px 12px}
+.side h2{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:8px 12px}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#2A3550;text-decoration:none;font-weight:500;font-size:14px}
+.side a:hover{background:#E6EBF2;color:#14213D}
+.side a[aria-current=page]{background:#DCEEF4;color:#084E64;font-weight:700}
+.num{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6478;width:20px;flex:none}
+.main{flex:999 1 560px;min-width:0;box-sizing:border-box;padding:24px 32px 56px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font:600 12px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#0B6A88;margin:0}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);line-height:1.1;margin:4px 0 8px;letter-spacing:-.01em}
+.lede{max-width:780px;margin:0;color:#3D475C;font-size:17px}
+.work{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.card{background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:20px;box-sizing:border-box}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0}
+.controls{flex:1 1 300px;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.group{font:700 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5A6478;margin:6px 0 -6px;border-top:1px solid #E6EBF2;padding-top:12px}
+.field{display:flex;flex-direction:column;gap:0}
+.frow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:14px}
+.field output{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#084E64;white-space:nowrap}
+.field input[type=range]{width:100%;height:44px;margin:0;accent-color:#0B6A88}
+.hint{margin:0;font-size:12px;color:#5A6478}
+.runbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#FFFFFF;border:1px solid #DDE2EA;border-radius:14px;padding:10px 12px}
+.speed{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.speed select{min-height:40px;border-radius:8px;border:1px solid #CBD3DF;padding:0 8px;font:600 13px Inter,sans-serif;background:#FFFFFF;color:#14213D}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px}
+.prog{flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#5A6478;font-family:'JetBrains Mono',monospace}
+.bar{height:6px;background:#E6EBF2;border-radius:3px;overflow:hidden}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.pol{display:flex;align-items:center;gap:8px;margin:0 0 4px}
+.pol h2{font-size:17px}
+.chip{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#3D475C;margin:8px 0 0;padding:0;list-style:none}
+.sw{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:10px 12px;border-bottom:1px solid #E6EBF2}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:12px;color:#5A6478;font-weight:700}
+.win{font-weight:700;color:#14532D}
+.math{font-family:'Times New Roman',serif;font-size:21px;color:#14213D;background:#F7F9FC;border:1px solid #E6EBF2;border-radius:10px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 32px}
+.math i{font-style:italic}
+.note{font-size:12px;color:#5A6478;margin:8px 0 0}
+.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.explain h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 8px}
+.explain p,.explain li{font-size:14px;color:#3D475C;margin:0}
+.explain ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.explain dl{margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.explain dt{font-weight:700;color:#14213D}
+.explain dd{margin:0;color:#3D475C}
+.biz{background:#14213D;border-color:#14213D}
+.biz h3{color:#FFFFFF}
+.biz p,.biz li{color:#D6DDEA}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="Main.dc.html" aria-label="SimEco, inicio">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#0B6A88"></rect><path d="M6 19 L11 13 L15 16 L22 8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      SimEco
+    </a>
+    <span class="route">#/revision?d=20&amp;sd=5&amp;L=7&amp;ns=95&amp;Q=400&amp;R=20&amp;dias=120&amp;seed=42</span>
+    <span class="spacer"></span>
+    <div class="tool">
+      <label class="seed" for="seed">Semilla <input id="seed" type="number" value="42" inputmode="numeric"></label>
+      <button class="btn dark sm" type="button">Guardar escenario</button>
+      <button class="btn dark sm" type="button">Copiar enlace</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side" aria-label="Simulaciones">
+      <h2>Simulaciones</h2>
+      <ol>
+        <li><a href="Main.dc.html"><span class="num">00</span>Inicio</a></li>
+        <li><a href="OfertaDemanda.dc.html"><span class="num">01</span>Oferta y demanda</a></li>
+        <li><a href="Interes.dc.html"><span class="num">02</span>Interés compuesto</a></li>
+        <li><a href="EOQ.dc.html"><span class="num">03</span>Cantidad económica (EOQ)</a></li>
+        <li><a href="PuntoReorden.dc.html"><span class="num">04</span>Punto de reorden</a></li>
+        <li><a href="Revision.dc.html" aria-current="page"><span class="num">05</span>Revisión continua vs. periódica</a></li>
+        <li><a href="Bullwhip.dc.html"><span class="num">06</span>Efecto látigo</a></li>
+        <li><a href="BeerGame.dc.html"><span class="num">07</span>Beer Game</a></li>
+        <li><a href="Colas.dc.html"><span class="num">08</span>Colas y cuellos de botella</a></li>
+      </ol>
+    </nav>
+    <main class="main">
+      <section>
+        <p class="eyebrow">05 · Inventarios · simulación dinámica</p>
+        <h1>Sistemas de revisión: continua vs. periódica</h1>
+        <p class="lede">Dos almacenes enfrentan exactamente la misma demanda aleatoria (misma semilla). Uno vigila su inventario todo el tiempo y pide una cantidad fija; el otro revisa cada R días y pide lo necesario para llegar a un nivel objetivo.</p>
+      </section>
+
+      <div class="runbar" role="group" aria-label="Control de la simulación">
+        <button class="btn primary" type="button">
+          <sc-if value="{{ running }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect></svg></sc-if>
+          <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2 L14 8 L4 14 Z" fill="currentColor"></path></svg></sc-if>
+          {{ playLabel }}
+        </button>
+        <button class="btn" type="button">Avanzar 1 día</button>
+        <button class="btn" type="button">Reiniciar</button>
+        <label class="speed" for="vel">Velocidad
+          <select id="vel"><option>0.5×</option><option selected>1×</option><option>2×</option><option>4×</option></select>
+        </label>
+        <div class="prog" aria-label="Progreso">
+          <span>{{ dayLabel }}</span>
+          <div class="bar"><div style="height: 100%; width: {{ pct }}; background: #0B6A88"></div></div>
+        </div>
+        <span class="badge" role="status" style="background: {{ badgeBg }}; color: {{ badgeFg }}">
+          <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"></circle></svg>{{ stateLabel }}
+        </span>
+      </div>
+
+      <div class="work">
+        <form class="card controls" aria-labelledby="p-h">
+          <h2 id="p-h">Parámetros</h2>
+          <p class="group">Demanda y proveedor (comunes)</p>
+          <div class="field">
+            <div class="frow"><label for="d">Demanda diaria promedio (d̄)</label><output for="d">20 u/día</output></div>
+            <input id="d" type="range" min="1" max="200" step="1" value="20" aria-describedby="d-h">
+            <p class="hint" id="d-h">1–200 unidades por día</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="sd">Variabilidad diaria (σ<sub>d</sub>)</label><output for="sd">5 u</output></div>
+            <input id="sd" type="range" min="0" max="50" step="0.5" value="5" aria-describedby="sd-h">
+            <p class="hint" id="sd-h">0–50 unidades</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="L">Tiempo de entrega (L)</label><output for="L">7 días</output></div>
+            <input id="L" type="range" min="1" max="30" step="1" value="7" aria-describedby="L-h">
+            <p class="hint" id="L-h">1–30 días</p>
+          </div>
+          <div class="field">
+            <div class="frow"><label for="ns">Nivel de servicio</label><output for="ns">95 % · z = 1.645</output></div>
+            <input id="ns" type="range" min="50" max="99.9" step="0.1" value="95" aria-describedby="ns-h">
+            <p class="hint" id="ns-h">50–99.9 %</p>
+          </div>
+          <p class="group">Continua (s, Q)</p>
+          <div class="field">
+            <div class="frow"><label for="Q">Cantidad fija por pedido (Q)</label><output for="Q">400 u</output></div>
+            <input id="Q" type="range" min="10" max="2000" step="10" value="400" aria-describedby="Q-h">
+            <p class="hint" id="Q-h">10–2,000 unidades</p>
+          </div>
+          <p class="group">Periódica (R, S)</p>
+          <div class="field">
+            <div class="frow"><label for="R">Periodo de revisión (R)</label><output for="R">20 días</output></div>
+            <input id="R" type="range" min="1" max="60" step="1" value="20" aria-describedby="R-h">
+            <p class="hint" id="R-h">1–60 días entre revisiones</p>
+          </div>
+          <button class="btn" type="reset">Restablecer valores</button>
+        </form>
+
+        <div class="results">
+          <div class="duo">
+            <section class="card chart" aria-labelledby="c1-h">
+              <div class="pol"><h2 id="c1-h">Continua</h2><span class="chip" style="background: #DCEEF4; color: #084E64">s = 161.8 · Q = 400</span></div>
+              <p class="hint">Pide siempre 400 u cuando la posición cae a s. Intervalos variables.</p>
+              <svg viewBox="0 0 720 200" role="img" aria-label="Revisión continua: seis pedidos de 400 unidades en intervalos irregulares; un faltante en el día 59.">
+                <line x1="60" y1="170" x2="700" y2="170" stroke="#5A6478"></line>
+                <line x1="60" y1="20" x2="60" y2="170" stroke="#5A6478"></line>
+                <line x1="60" y1="129.6" x2="700" y2="129.6" stroke="#8A3B0A" stroke-dasharray="6 4"></line>
+                <polyline points="60,65 86.7,90.5 113.3,114.5 129.3,130 150.7,148.8 166.7,164.5 166.7,64.5 193.3,87.5 220,111 236,128.8 257.3,152 273.3,168 273.3,68 300,95 326.7,121.3 337.3,130.5 358.7,155 374.7,170 380,170 380,70 406.7,94.5 433.3,118.8 444,129.3 465.3,148.8 481.3,162.5 481.3,62.5 508,87.5 534.7,112 550.7,132 572,152.5 588,166.5 588,66.5 614.7,90.5 641.3,114.5 657.3,130.5 678.7,150 694.7,162.5 694.7,62.5 700,67.5" fill="none" stroke="#0B6A88" stroke-width="2.5" stroke-linejoin="round"></polyline>
+                <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                  <text x="52" y="174" text-anchor="end">0</text><text x="52" y="74" text-anchor="end">400</text><text x="52" y="24" text-anchor="end">600</text>
+                  <text x="60" y="190" text-anchor="middle">0</text><text x="380" y="190" text-anchor="middle">60</text><text x="700" y="190" text-anchor="middle">120</text>
+                </g>
+              </svg>
+            </section>
+            <section class="card chart" aria-labelledby="c2-h">
+              <div class="pol"><h2 id="c2-h">Periódica</h2><span class="chip" style="background: #FDEBDD; color: #8A3B0A">R = 20 d · S = 582.7</span></div>
+              <p class="hint">Revisa cada 20 días y pide S − posición. Cantidades variables.</p>
+              <svg viewBox="0 0 720 200" role="img" aria-label="Revisión periódica: revisiones cada 20 días, pedidos de tamaño variable que llegan 7 días después; sin faltantes pero con más inventario promedio.">
+                <g stroke="#CBD3DF" stroke-dasharray="2 4">
+                  <line x1="166.7" y1="20" x2="166.7" y2="170"></line><line x1="273.3" y1="20" x2="273.3" y2="170"></line><line x1="380" y1="20" x2="380" y2="170"></line><line x1="486.7" y1="20" x2="486.7" y2="170"></line><line x1="593.3" y1="20" x2="593.3" y2="170"></line>
+                </g>
+                <line x1="60" y1="170" x2="700" y2="170" stroke="#5A6478"></line>
+                <line x1="60" y1="20" x2="60" y2="170" stroke="#5A6478"></line>
+                <line x1="60" y1="24.3" x2="700" y2="24.3" stroke="#8A3B0A" stroke-dasharray="6 4"></line>
+                <polyline points="60,95 97.3,130 97.3,58.8 204,157 204,57 310.7,162.5 310.7,62.5 417.3,152.5 417.3,52.5 524,166.3 524,66.3 630.7,158 630.7,58 700,122.5" fill="none" stroke="#C2410C" stroke-width="2.5" stroke-linejoin="round"></polyline>
+                <g font-family="Inter, sans-serif" font-size="12" fill="#5A6478">
+                  <text x="52" y="174" text-anchor="end">0</text><text x="52" y="74" text-anchor="end">400</text><text x="52" y="24" text-anchor="end">600</text>
+                  <text x="60" y="190" text-anchor="middle">0</text><text x="380" y="190" text-anchor="middle">60</text><text x="700" y="190" text-anchor="middle">120</text>
+                </g>
+              </svg>
+            </section>
+          </div>
+          <ul class="legend" style="margin-top: -8px">
+            <li><span class="sw" style="background: #0B6A88"></span>Inventario · continua</li>
+            <li><span class="sw" style="background: #C2410C"></span>Inventario · periódica</li>
+            <li><span class="sw" style="background: #8A3B0A"></span>s (punto de reorden) / S (nivel objetivo)</li>
+            <li><span class="sw" style="background: #CBD3DF"></span>Día de revisión</li>
+          </ul>
+
+          <section class="card" aria-labelledby="t-h">
+            <h2 id="t-h" style="margin-bottom: 8px">Comparación de resultados</h2>
+            <div class="tbl">
+              <table>
+                <caption class="hint" style="text-align: left; padding-bottom: 6px">Mismos 120 días de demanda, semilla 42</caption>
+                <thead><tr><th scope="col">Indicador</th><th scope="col">Continua (s, Q)</th><th scope="col">Periódica (R, S)</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row" style="text-align: left">Inventario de seguridad</th><td class="win">21.8</td><td>42.7</td></tr>
+                  <tr><th scope="row" style="text-align: left">Inventario promedio</th><td class="win">221.8</td><td>242.7</td></tr>
+                  <tr><th scope="row" style="text-align: left">Pedidos colocados</th><td>6</td><td>6</td></tr>
+                  <tr><th scope="row" style="text-align: left">Tamaño del pedido</th><td>400 fijo</td><td>380–420 variable</td></tr>
+                  <tr><th scope="row" style="text-align: left">Unidades faltantes</th><td>13</td><td class="win">0</td></tr>
+                  <tr><th scope="row" style="text-align: left">Revisiones necesarias</th><td>120 (diaria)</td><td class="win">6</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="f-h">
+            <h2 id="f-h" style="margin-bottom: 12px">Fórmulas del modelo</h2>
+            <div class="math">
+              <span><i>s</i> = <i>d̄L</i> + <i>zσ</i><sub><i>d</i></sub>√<i>L</i></span>
+              <span><i>S</i> = <i>d̄</i>(<i>R</i> + <i>L</i>) + <i>zσ</i><sub><i>d</i></sub>√(<i>R</i> + <i>L</i>)</span>
+              <span><i>q</i><sub><i>k</i></sub> = <i>S</i> − <i>IP</i><sub><i>k</i></sub></span>
+            </div>
+            <p class="note">IP = inventario a mano + en tránsito − pendientes. La periódica protege R + L días, por eso necesita más inventario de seguridad.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="explain" aria-label="Explicación de la simulación">
+        <div class="card">
+          <h3>¿Qué simula?</h3>
+          <p>Dos políticas clásicas de reposición frente a la misma demanda aleatoria, para comparar inventario, faltantes y esfuerzo de control.</p>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <dl>
+            <div><dt>s, Q</dt><dd>Continua: cuándo pedir (posición ≤ s) y cuánto (fijo).</dd></div>
+            <div><dt>R, S</dt><dd>Periódica: cada cuánto revisar y hasta qué nivel reponer.</dd></div>
+            <div><dt>d̄, σ, L, z</dt><dd>Demanda, incertidumbre, espera y nivel de servicio comunes.</dd></div>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>Efectos al moverlos</h3>
+          <ul>
+            <li>Un R mayor eleva S y el inventario promedio de la periódica.</li>
+            <li>Con σ alta, la continua reacciona antes y protege mejor por unidad de inventario.</li>
+            <li>Con R pequeño ambas políticas se parecen.</li>
+          </ul>
+        </div>
+        <div class="card biz">
+          <h3>Utilidad en los negocios</h3>
+          <p>La continua conviene para artículos caros o críticos (clase A) con escáner o ERP en tiempo real; la periódica, para consolidar pedidos con un proveedor, rutas de entrega fijas o tiendas con conteo semanal.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"estado":{"editor":"enum","options":["corriendo","pausa","reiniciada"],"default":"pausa"},"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const e = this.props.estado ?? 'pausa';
+    const map = {
+      corriendo: { stateLabel: 'Corriendo', badgeBg: '#DCEEF4', badgeFg: '#084E64', playLabel: 'Pausar', dayLabel: 'Día 84 de 120', pct: '70%' },
+      pausa: { stateLabel: 'En pausa', badgeBg: '#FDF1E4', badgeFg: '#8A3B0A', playLabel: 'Reanudar', dayLabel: 'Día 120 de 120', pct: '100%' },
+      reiniciada: { stateLabel: 'Reiniciada', badgeBg: '#EEF2F7', badgeFg: '#3D475C', playLabel: 'Iniciar', dayLabel: 'Día 0 de 120', pct: '0%' }
+    };
+    const v = map[e] || map.pausa;
+    return Object.assign({ running: e === 'corriendo', notRunning: e !== 'corriendo' }, v);
+  }
+}
+</script>
+</body>
+</html>
